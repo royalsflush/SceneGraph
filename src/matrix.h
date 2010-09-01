@@ -4,6 +4,9 @@
 #include <assert.h>
 #include <stdarg.h>
 
+#define TRACE(x...) x
+#define PRINT(x...) TRACE(printf(x))
+
 template <typename T>
 
 class Matrix {
@@ -16,14 +19,15 @@ class Matrix {
 	~Matrix(); //ok
 	Matrix(int n); //ok
 	Matrix(int r, int c); //ok
+	Matrix(const Matrix<T>&);//ok
 
 	void sparse(); //ok
 	bool isSparse(); //ok
 	void identity(); //ok
 	void set(int r, int c, ...); //check floating points
-	void transpose();
-	Matrix getInverse();
-	T determinant();
+	void transpose(); //ok
+	Matrix invert();
+	T det(); //ok for n<=4 (needs LUdecomp for n>=5)
 	Matrix LUdecomp();
 
 	int getR() const; //ok
@@ -32,9 +36,9 @@ class Matrix {
 	Matrix& operator*(Matrix&); //esta dando merda
 	Matrix& operator=(const Matrix&); //ok
 //	bool operator=(const T[]);
-	Matrix operator+(Matrix&); //idem aqui
+	Matrix& operator+(Matrix&); //idem aqui
 //	Matrix operator*(const T); //nao testei
-	Matrix& operator*=(const T);
+	Matrix& operator*=(const T); //ok
 //	Matrix& operator*=(Matrix&);
 	operator T*();
 	T* operator[](const int); //ok
@@ -70,6 +74,21 @@ Matrix<T>::Matrix(int r, int c) : r(r), c(c)
 
 	this->mat = new T[r*c];
 	this->sparse();
+}
+
+//copy constructor
+template <typename T>
+Matrix<T>::Matrix(const Matrix<T>& a)
+{
+	this->r = a.getR();
+	this->c = a.getC();
+
+	this->mat = new T[(this->r)*(this->c)];
+
+	for (int i=0; i<(this->r); i++) {
+		for (int j=0; j<(this->c); j++)
+			this->mat[(this->c)*i+j]=a.getPos(i,j);
+	} 
 }
 
 //-------------- Destructor ---------------//
@@ -130,13 +149,15 @@ void Matrix<T>::identity()
 template <typename T>
 void Matrix<T>::set(int r, int c, ...)
 {
-	delete[] this->mat;
-	this->r=r; this->c=c;	
+	if (this->r!=r || this->c!=c) {
+		delete[] this->mat;
+		this->r=r; this->c=c;	
+		this->mat = new T[r*c];
+	}
 
 	va_list args;
 	va_start(args, c);
 
-	this->mat = new T[r*c];
 
 	for (int i=0; i<r; i++) {
 		for (int j=0; j<c; j++)
@@ -149,13 +170,14 @@ void Matrix<T>::set(int r, int c, ...)
 template <>
 void Matrix<float>::set(int r, int c, ...)
 {
-	delete[] this->mat;
-	this->r=r; this->c=c;	
+	if (this->r!=r || this->c!=c) {
+		delete[] this->mat;
+		this->r=r; this->c=c;	
+		this->mat = new float[r*c];
+	}	
 
 	va_list args;
 	va_start(args, c);
-
-	this->mat = new float[r*c];
 
 	for (int i=0; i<r; i++) {
 		for (int j=0; j<c; j++)
@@ -168,13 +190,14 @@ void Matrix<float>::set(int r, int c, ...)
 template <>
 void Matrix<short>::set(int r, int c, ...)
 {
-	delete[] this->mat;
-	this->r=r; this->c=c;	
+	if (this->r!=r || this->c!=c) {
+		delete[] this->mat;
+		this->r=r; this->c=c;	
+		this->mat = new short[r*c];
+	}
 
 	va_list args;
 	va_start(args, c);
-
-	this->mat = new short[r*c];
 
 	for (int i=0; i<r; i++) {
 		for (int j=0; j<c; j++)
@@ -189,19 +212,96 @@ void Matrix<short>::set(int r, int c, ...)
 template <typename T>
 void Matrix<T>::transpose()
 {
+	Matrix<T> trans(this->c, this->r);
 
-}
-
-template <typename T>
-T Matrix<T>::determinant()
-{
-
-}
-
-template <typename T>
-Matrix<T> Matrix<T>::getInverse()
-{
+	for (int i=0; i<this->r; i++) {
+		for (int j=0; j<this->c; j++) 
+			trans[j][i] = this->mat[i*(this->c)+j];
+	}
 	
+	*this=trans;
+}
+
+template <typename T>
+T Matrix<T>::det()
+{
+	assert(this->r==this->c);
+
+	bool upper=true, lower=true;
+
+	//checks if is triangular (or diagonal)
+	//Det for triangulars is O(n^2) (finding the determinant itself is O(n), but
+	//checking if the matrix is triangular is O(n^2))
+	for (int i=0; i<this->r; i++) {
+		for (int j=0; j<this->c; j++) {
+			if (i==j) continue;
+			if (j>i && this->mat[i*(this->c)+j]!=0) lower=false;
+			else if (i<j && this->mat[i*(this->c)+j]!=0) upper=false;
+		}
+	}
+
+	if (upper || lower) {
+		T d=1;
+
+		for (int i=0; i<this->r; i++)
+			d*=this->mat[i*(this->c)+i];
+		
+		return d;
+	}
+
+	//If the matrix is not triangular, use other methods
+
+	//Laplace extension for n<=4 - O(n!)
+	switch(this->r) {
+		case 1:
+			return this->mat[0];
+		case 2:
+		case 3: 
+		case 4:
+		{
+			T d; Matrix<T> tmp(this->r-1);
+			d=0;			
+
+			for (int k=0; k<(this->r); k++) {
+				for (int i=1; i<(this->r); i++) {
+					for (int j=0, sm=0; j<(this->r) && sm<(this->r-1); j++) {	
+						if (j==k) continue;
+						tmp[i-1][sm++]=this->mat[i*(this->c)+j];
+					}
+				}				
+								
+				if (k%2==0)
+					d+= this->mat[k]*tmp.det();	
+				else
+					d-= this->mat[k]*tmp.det();	
+					
+			}
+
+			return d;
+		}	
+		default:
+			break;	
+	}
+
+	//LUdecomp and find det for upper matrix - O(n^3)
+	return (this->LUdecomp()).det();
+}
+
+	template <typename T>
+Matrix<T> Matrix<T>::invert()
+{
+	assert(this->det());
+}
+
+	template <typename T>
+Matrix<T> Matrix<T>::LUdecomp()
+{
+	assert(this->r==this->c);
+
+	Matrix<T> low(this->r);
+	Matrix<T> up(this->r);
+
+	//for (int i=0; i<			
 }
 
 //------------------- Getters ------------------//
@@ -231,7 +331,7 @@ T Matrix<T>::getPos(int i, int j) const
 //dependent to the matrix class, so the user should copy
 //it before destroying the matrix it is attached to (if
 //he/she wishes to maintain the array 
-template <typename T>
+	template <typename T>
 Matrix<T>::operator T*()
 {
 	return this->mat;
@@ -239,11 +339,11 @@ Matrix<T>::operator T*()
 
 //-------------- Assignment ------------------//
 
-//Assigns a to your matrix. Returns false if
-//a was sparse, else returns true;
-template <typename T>
+	template <typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& a) 
-{ 
+{
+	if (&a == this) return *this;
+
 	delete this->mat;
 	this->r = a.getR();
 	this->c = a.getC();
@@ -258,26 +358,14 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& a)
 	return *this;
 }
 
-//Assigns a const array to your matrix. Be sure
-//the array is HAS AT LEAST r*c size. Otherwise,
-//you'll get a segfault 
-/*template <typename T>
-bool Matrix<T>::operator=(const T a[])
-{
-	for (int i=0; i<(this->r); i++) {
-		for (int j=0; j<(this->c); j++)
-			this->mat[i*(this->c)+j]=a[i*(this->c)+j];
-	}
+//-------- Binary operators ---------//
 
-	return this->isSparse();
-} */
-
-//-------- Matrix - Matrix operations ---------//
-template <typename T>
+//Matrix multiplication
+	template <typename T>
 Matrix<T>& Matrix<T>::operator*(Matrix<T>& a) 
 {
 	assert(this->c == a.getR());
-	
+
 	Matrix<T> res(this->r, a.getC());
 
 	for (int i=0; i<this->r; i++) {
@@ -291,8 +379,9 @@ Matrix<T>& Matrix<T>::operator*(Matrix<T>& a)
 	return res;
 }
 
-template <typename T>
-Matrix<T> Matrix<T>::operator+(Matrix<T>& a)
+//Matrix addition
+	template <typename T>
+Matrix<T>& Matrix<T>::operator+(Matrix<T>& a)
 {
 	assert((this->c==a.getC()) && (this->r==a.getR()));
 	Matrix res(this->c, this->r);
@@ -303,13 +392,14 @@ Matrix<T> Matrix<T>::operator+(Matrix<T>& a)
 	}
 }
 
+//------- Compound operators --------//
 
-//---------- Matrix - number operations -------//
-template <typename T>
+//Scalar multiplication
+	template <typename T>
 Matrix<T>& Matrix<T>::operator*=(const T a) 
 { 
-	for (int i=0; i<this->c; i++) {
-		for (int j=0; j<this->r; j++)
+	for (int i=0; i<this->r; i++) {
+		for (int j=0; j<this->c; j++)
 			this->mat[i*(this->c)+j]*=a;
 	}
 
@@ -318,7 +408,7 @@ Matrix<T>& Matrix<T>::operator*=(const T a)
 
 
 //----------- Array subscript overload ---------//
-template <typename T>
+	template <typename T>
 T* Matrix<T>::operator[](const int i)
 {
 	return &(this->mat[i*this->c]);
