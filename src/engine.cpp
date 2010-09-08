@@ -2,12 +2,14 @@
 
 #include "engine.h"
 #include "renderer.h"
+#include "scene.h"
 
 Engine* Engine::theEngine = NULL;
 
 Engine::Engine()
 {
 	theRenderer = NULL;
+	curr = NULL;
 }
 
 Engine::~Engine()
@@ -21,6 +23,14 @@ void Engine::setRenderer(Renderer* newRend)
 		delete theRenderer;
 
 	theRenderer = newRend;
+}
+
+void Engine::setScene(Scene* newScene)
+{
+	if (curr)
+		delete curr;
+
+	curr = newScene;
 }
 
 Engine& Engine::getInstance()
@@ -39,8 +49,6 @@ void Engine::initRender()
 
 void Engine::renderCurrentScene()
 {
-	printf("huh?");
-
 	if (theRenderer)
 		theRenderer->renderSphere();
 }

@@ -2,10 +2,19 @@
 #include "matrix.h"
 using namespace std;
 
+void print(Matrix<int>& a) {
+	for (int i=0; i<a.getR(); i++) {
+		for (int j=0; j<a.getC(); j++)
+			printf("%d ", a[i][j]);
+		printf("\n");
+	}
+	printf("\n");
+}
+
 int main() {
-	Matrix<int> a(3);
+	Matrix<int> a(2);
 	//Matrix<int> b(3);	
-	a[1][2]=5;
+	a[1][1]=5;
 
 /*	for (int i=0; i<a.getR(); i++) {
 		for (int j=0; j<a.getC(); j++)
@@ -28,32 +37,26 @@ int main() {
 	//b.set(2, 1,
 	//	1, 2);
 
-	Matrix<int> b(3);
-	b.set(3, 3,
-		-2, 2, -3,
-		-1, 1, 3,
-		2, 0, -1);
+	Matrix<int> b(a);
 
-	a.set(2, 2, 
-		-1, 3,
-		2, -1);
+	b.set(2, 2,
+		1, 2,
+		4, 5);
 
-	printf("%d\n", b.det()); 
-	printf("%d\n", a.det());
 
-	for (int i=0; i<b.getR(); i++) {
-		for (int j=0; j<b.getC(); j++)
-			printf("%d ", b[i][j]);
+	print(a);
+	print(b);
+	
+	Matrix<int> c(a*b);
 
-		printf("\n");
-	}
+	a*=b;
 
-	for (int i=0; i<a.getR(); i++) {
-		for (int j=0; j<a.getC(); j++)
-			printf("%d ", a[i][j]);
+	print(a);
 
-		printf("\n");
-	}
+	//printf("%d\n", b.det()); 
+	//printf("%d\n", a.det());
+
+	print(c);
 
 	return 0;
 }

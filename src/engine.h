@@ -2,11 +2,13 @@
 #define ENGINE_H
 
 class Renderer;
+class Scene;
 
 class Engine {
 	static Engine* theEngine;
 	
 	Renderer* theRenderer;
+	Scene* curr;
 
 	Engine();
 	~Engine();
@@ -15,6 +17,7 @@ class Engine {
 	static Engine& getInstance();
 
 	void setRenderer(Renderer*);
+	void setScene(Scene*);
 	void initRender();
 	void renderCurrentScene();
 	//void changeScene();

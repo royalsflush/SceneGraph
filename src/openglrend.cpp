@@ -55,8 +55,6 @@ void OpenGLRenderer::renderSphere()
 	
 	glEnd(); //End triangle coordinates
 	
-	printf("work!");
-
 	glutSwapBuffers(); //Send the 3D scene to the screen
 }
 
