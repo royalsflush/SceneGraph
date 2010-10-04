@@ -1,0 +1,23 @@
+SceneGraph Checklist
+
+Things that HAVE to be DONE:
+ - Rotate and Scale in the Transform class
+ - Inverse matrix algorithm (and apply it to the camera)
+ - Support for more lights 
+ - Textures
+ - Meshs
+ - Manipulator (get the code) - add it to the camera class
+ - The environ class
+ - Normals
+ - Cut both the sphere and the cube into pieces for the lighting to work
+	properly
+
+Things that HAVE to be CHANGED:
+ - Transform class must not use OpenGL to multiply matrices
+ - Returns have to be handled correctly
+ - The scene.render function must not call setLights or setCamera (alternatives?)
+
+Things that will be cool:
+ - Finish the matrix class and use it
+ - Separate rendering from the actual graph (hard one)
+

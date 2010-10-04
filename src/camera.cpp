@@ -1,5 +1,4 @@
 //This camera is implemented using opengl
-//(temporarily)
 
 #ifdef __APPLE__
 	#include <OpenGL/OpenGL.h>
