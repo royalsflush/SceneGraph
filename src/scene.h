@@ -3,8 +3,11 @@
 
 #include "group.h"
 
-class scene {
-
+class Scene : public Group {
+	public:
+	int setCamera();
+	int setLights();
+	void render();	
 };
 
 #endif /* SG_SCENE_H */

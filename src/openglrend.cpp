@@ -12,7 +12,9 @@
 
 void OpenGLRenderer::init()
 {
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
 }
 
 void OpenGLRenderer::renderSphere()

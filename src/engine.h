@@ -20,8 +20,8 @@ class Engine {
 	void setScene(Scene*);
 	void initRender();
 	void renderCurrentScene();
-	//void changeScene();
-	//svoid handleKeyPress(unsigned char k, int x, int y);
+	void changeScene();
+	//void handleKeyPress(unsigned char k, int x, int y);
 };
 
 #endif /* ENGINE_H */

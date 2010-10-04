@@ -10,7 +10,11 @@ class Group : public Node {
 	list<Node*> children;	
 
 	public:
+	void render();
+	int setLights();
+	int setCamera();	
+
 	void addNode(Node* newNode);
-}
+};
 
 #endif /* SG_GROUP_H */

@@ -44,11 +44,12 @@ Engine& Engine::getInstance()
 void Engine::initRender()
 {
 	if (theRenderer)
-		theRenderer->init();	
+		theRenderer->init();
+		
 }
 
 void Engine::renderCurrentScene()
 {
-	if (theRenderer)
-		theRenderer->renderSphere();
+	if (curr)
+		curr->render();
 }
