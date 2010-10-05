@@ -80,6 +80,8 @@ void createScene()
 	theCamera->setEye(10.0f, 5.0f, 20.0f);
 	theCamera->setUp(0.0f, 1.0f, 0.0f);
 	theCamera->setCenter(10.0f, 3.0f, 10.0f);
+	theCamera->setAspectRatio((float)WIN_W/(float)WIN_H);
+	theCamera->setAngle(50.0f);
 
 	Material* redPlastic = new Material(0.5f, 0.0f, 0.0f);
 	redPlastic->setSpecular(0.5f, 0.5f, 0.5f);
@@ -108,6 +110,7 @@ void createScene()
 
 	Scene* theScene = new Scene;
 	theScene->addNode(theCamera);
+	theScene->setCamera(theCamera);
 	theScene->addNode(l0);
 	theScene->addNode(transl);
 

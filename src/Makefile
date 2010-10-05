@@ -26,10 +26,10 @@ clean:
 	rm $(OUTPUT)
 
 gs: $(OBJ)
-	$(CC) $(CFLAGS) $(LIBS) -o $(OUTPUT) $^
+	$(CC) $(CFLAGS) $(LIBS) -D_DBG -o $(OUTPUT) $^
 
 .cpp.o:
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -D_DBG -c -o $@ $<
 
 depend:
 	makedepend -- $(CFLAGS) -- $(SRC)

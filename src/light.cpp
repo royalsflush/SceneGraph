@@ -56,7 +56,13 @@ int Light::setupLights()
 	glLightfv(GL_LIGHT0, GL_POSITION, pos);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
+
+	return 1;
 }
 
-int Light::setupCamera() { }
+int Light::setupCamera() 
+{ 
+	return 0;
+}
+
 void Light::render() { }

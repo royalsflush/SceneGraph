@@ -27,6 +27,10 @@ void Transform::loadInv()
 
 void Transform::render()
 {
+	#ifdef _DBG
+		printf("Transform->render()\n");
+	#endif
+
 	load();
 	Group::render();
 	unload();
@@ -35,6 +39,10 @@ void Transform::render()
 int Transform::setupLights()
 {
 	int numLights;
+
+	#ifdef _DBG
+		printf("Transform->setupLights()\n");
+	#endif
 
 	load();
 	numLights = Group::setupLights();
@@ -46,6 +54,10 @@ int Transform::setupLights()
 int Transform::setupCamera()
 {
 	int camera;
+
+	#ifdef _DBG
+		printf("Transform->setupCamera()\n");
+	#endif
 
 	load();
 	camera = Group::setupCamera();

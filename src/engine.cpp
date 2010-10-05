@@ -35,6 +35,10 @@ Engine& Engine::getInstance()
 
 void Engine::initRender()
 {
+	#ifdef _DBG
+		printf("Engine->initRender()\n");
+	#endif
+
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);		
@@ -42,20 +46,26 @@ void Engine::initRender()
 
 void Engine::handleResize(int w, int h)
 {
+	#ifdef _DBG
+		printf("Engine->handleResize(%d, %d)\n", w, h);
+	#endif
+	
 	glViewport(0, 0, w, h);
 
-	glMatrixMode(GL_PROJECTION);
-
-	glLoadIdentity(); 
-	gluPerspective(45.0,                  //The camera angle
-			(double)w / (double)h, //The width-to-height ratio
-			1.0,                   //The near z clipping coordinate
-			200.0);                //The far z clipping coordinate
-
+	curr->changeAspect((float)w/(float)h);
+	curr->setupCamera();
 }
 
 void Engine::renderCurrentScene()
 {
+	#ifdef _DBG
+		printf("Engine->renderCurrentScene()\n");
+	#endif
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	if (curr)
 		curr->render();
+
+	glutSwapBuffers();
 }

@@ -13,10 +13,19 @@ Entity::Entity(Shape* s, Appearance* app) : shape(s), appearance(app) { }
 
 void Entity::render() 
 {
+	glMatrixMode(GL_MODELVIEW);
+
 	this->appearance->load();
 	this->shape->draw();
 	this->appearance->unload();
 }
 
-int Entity::setupCamera() { }
-int Entity::setupLights() { }
+int Entity::setupCamera() 
+{ 
+	return 0;
+}
+
+int Entity::setupLights() 
+{ 
+	return 0;
+}

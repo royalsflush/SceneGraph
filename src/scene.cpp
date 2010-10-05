@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifdef __APPLE__
 	#include <OpenGL/OpenGL.h>
 	#include <GLUT/glut.h>
@@ -7,29 +9,52 @@
 
 #include "group.h"
 #include "scene.h"
+#include "camera.h"
 
 void Scene::render() 
 { 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(50.0f, 1.0f, 1.0f, 100.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	#ifdef _DBG
+		printf("Scene->render()\n");
+	#endif
+
 
 	Group::setupCamera();
 	Group::setupLights();
 	Group::render();
-	
-	glutSwapBuffers();
 }
 
 int Scene::setupCamera()
 {
-	Group::setupCamera();
+	#ifdef _DBG
+		printf("Scene->setupCamera()\n");
+	#endif
+
+	return Group::setupCamera();
+}
+
+void Scene::changeAspect(float nasp)
+{
+	if (!this->cam) {
+		#ifdef _DBG
+			printf("Someone forgot to set up the camera!!\n");
+		#endif
+
+		return;
+	}
+
+	this->cam->setAspectRatio(nasp);
+}
+
+void Scene::setCamera(Camera* c)
+{
+	this->cam=c;
 }
 
 int Scene::setupLights()
 {
-	Group::setupLights();
+	#ifdef _DBG
+		printf("Scene->setupLights()\n");
+	#endif
+		
+	return Group::setupLights();
 }
