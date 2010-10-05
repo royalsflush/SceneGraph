@@ -18,20 +18,20 @@ void Group::render()
 	}
 }
 
-int Group::setLights()
+int Group::setupLights()
 {	
 	list<Node*>::iterator it;
 	
 	for (it=this->children.begin(); it!=this->children.end(); ++it) {
-		(*it)->setLights();
+		(*it)->setupLights();
 	}
 }
 
-int Group::setCamera()
+int Group::setupCamera()
 {
 	list<Node*>::iterator it;
 	
 	for (it=this->children.begin(); it!=this->children.end(); ++it) {
-		(*it)->setCamera();
+		(*it)->setupCamera();
 	}
 }

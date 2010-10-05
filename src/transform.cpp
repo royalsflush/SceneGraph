@@ -32,23 +32,23 @@ void Transform::render()
 	unload();
 }
 
-int Transform::setLights()
+int Transform::setupLights()
 {
 	int numLights;
 
 	load();
-	numLights = Group::setLights();
+	numLights = Group::setupLights();
 	unload();
 
 	return numLights;	
 }
 
-int Transform::setCamera()
+int Transform::setupCamera()
 {
 	int camera;
 
 	load();
-	camera = Group::setLights();
+	camera = Group::setupCamera();
 	unload();
 
 	return camera;

@@ -14,8 +14,8 @@ class Transform : public Group {
 
 	public:
 	void render();
-	int setLights();
-	int setCamera();
+	int setupLights();
+	int setupCamera();
 
 	void rotate();
 	void translate(float dx, float dy, float dz);

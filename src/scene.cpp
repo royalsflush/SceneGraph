@@ -17,19 +17,19 @@ void Scene::render()
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Group::setCamera();
-	Group::setLights();
+	Group::setupCamera();
+	Group::setupLights();
 	Group::render();
 	
 	glutSwapBuffers();
 }
 
-int Scene::setCamera()
+int Scene::setupCamera()
 {
-	Group::setCamera();
+	Group::setupCamera();
 }
 
-int Scene::setLights()
+int Scene::setupLights()
 {
-	Group::setLights();
+	Group::setupLights();
 }

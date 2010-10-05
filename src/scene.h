@@ -5,8 +5,8 @@
 
 class Scene : public Group {
 	public:
-	int setCamera();
-	int setLights();
+	int setupCamera();
+	int setupLights();
 	void render();	
 };
 

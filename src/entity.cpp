@@ -18,5 +18,5 @@ void Entity::render()
 	this->appearance->unload();
 }
 
-int Entity::setCamera() { }
-int Entity::setLights() { }
+int Entity::setupCamera() { }
+int Entity::setupLights() { }

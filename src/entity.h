@@ -13,8 +13,8 @@ class Entity : public Node {
 	public:
 	Entity(Shape* s, Appearance* app);
 	void render();
-	int setCamera();
-	int setLights();
+	int setupCamera();
+	int setupLights();
 };
 
 #endif /* ENTITY_H */

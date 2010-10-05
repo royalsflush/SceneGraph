@@ -11,8 +11,8 @@ class Group : public Node {
 
 	public:
 	void render();
-	int setLights();
-	int setCamera();	
+	int setupLights();
+	int setupCamera();	
 
 	void addNode(Node* newNode);
 };

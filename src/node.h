@@ -6,8 +6,8 @@
 class Node {
 	public:
 	virtual void render() = 0;
-	virtual int setLights() = 0;
-	virtual int setCamera() = 0;
+	virtual int setupLights() = 0;
+	virtual int setupCamera() = 0;
 };
 
 #endif /* SG_NODE_H */
