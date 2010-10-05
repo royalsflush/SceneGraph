@@ -46,12 +46,12 @@ void Camera::setZPlanes(float near, float far)
 	this->zfar=far;
 }
 
-int Camera::setCamera() 
+int Camera::setupCamera() 
 {
 	gluLookAt(this->eye[X], this->eye[Y], this->eye[Z],
 		this->center[X], this->center[Y], this->center[Z],
 		this->up[X], this->up[Y], this->up[Z]);
 }
 
-int Camera::setLights() { }
+int Camera::setupLights() { }
 void Camera::render() { }

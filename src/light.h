@@ -16,8 +16,8 @@ class Light : public Node {
 	void setSpecular(float r, float g, float b, float a);
 	void setDiffuse(float r, float g, float b, float a);
 	void setAmbient(float r, float g, float b, float a);
-	int setLights();
-	int setCamera();
+	int setupLights();
+	int setupCamera();
 	void render();
 };
 

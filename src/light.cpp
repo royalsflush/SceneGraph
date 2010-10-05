@@ -49,7 +49,7 @@ void Light::setDiffuse(float r, float g, float b, float a)
 	dif[A]=a;
 }
 
-int Light::setLights()
+int Light::setupLights()
 {
 	glEnable(GL_LIGHT0);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
@@ -58,5 +58,5 @@ int Light::setLights()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
 }
 
-int Light::setCamera() { }
+int Light::setupCamera() { }
 void Light::render() { }

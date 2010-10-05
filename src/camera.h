@@ -8,8 +8,8 @@ class Camera : public Node {
 	float angle, znear, zfar;
 
 	public:
-	int setCamera();
-	int setLights();
+	int setupCamera();
+	int setupLights();
 	void render();
 
 	void setEye(float x, float y, float z);
