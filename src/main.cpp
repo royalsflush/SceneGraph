@@ -11,8 +11,6 @@
 #endif
 
 #include "engine.h"
-#include "renderer.h"
-#include "openglrend.h"
 #include "scene.h"
 #include "camera.h"
 #include "transform.h"
