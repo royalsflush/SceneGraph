@@ -35,9 +35,6 @@ void createScene();
 
 int main(int argc, char ** argv)
 {
-	OpenGLRenderer* r = new OpenGLRenderer;	
-	Engine::getInstance().setRenderer(r);
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(WIN_W, WIN_H);

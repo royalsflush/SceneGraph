@@ -12,9 +12,6 @@
 
 void OpenGLRenderer::init()
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
 }
 
 void OpenGLRenderer::renderSphere()
@@ -39,8 +36,6 @@ void OpenGLRenderer::renderSphere()
 	
 	//Pentagon
 	glVertex3f(0.5f, 0.5f, -5.0f);
-	glVertex3f(1.5f, 0.5f, -5.0f);
-	glVertex3f(0.5f, 1.0f, -5.0f);
 	
 	glVertex3f(0.5f, 1.0f, -5.0f);
 	glVertex3f(1.5f, 0.5f, -5.0f);

@@ -8,28 +8,13 @@
 #endif
 
 #include "engine.h"
-#include "renderer.h"
 #include "scene.h"
 
 Engine* Engine::theEngine = NULL;
 
 Engine::Engine()
 {
-	theRenderer = NULL;
 	curr = NULL;
-}
-
-Engine::~Engine()
-{
-	delete theRenderer;
-}
-
-void Engine::setRenderer(Renderer* newRend)
-{
-	if (theRenderer)
-		delete theRenderer;
-
-	theRenderer = newRend;
 }
 
 void Engine::setScene(Scene* newScene)
@@ -50,9 +35,9 @@ Engine& Engine::getInstance()
 
 void Engine::initRender()
 {
-	if (theRenderer)
-		theRenderer->init();
-		
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);		
 }
 
 void Engine::handleResize(int w, int h)
