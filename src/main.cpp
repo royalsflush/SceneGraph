@@ -70,17 +70,7 @@ void initRender()
 
 void handleResize(int w, int h)
 {
-
-	glViewport(0, 0, w, h);
-
-	glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
-
-	//Set the camera perspective
-	glLoadIdentity(); //Reset the camera
-	gluPerspective(45.0,                  //The camera angle
-			(double)w / (double)h, //The width-to-height ratio
-			1.0,                   //The near z clipping coordinate
-			200.0);                //The far z clipping coordinate
+	Engine::getInstance().handleResize(w, h);
 }
 
 void render()
