@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifdef __APPLE__
 	#include <OpenGL/OpenGL.h>
 	#include <GLUT/glut.h>
@@ -5,13 +7,27 @@
 	#include <GL/glut.h>
 #endif
 
-
 #include "transform.h"
+
+Transform::Transform()
+{
+	loadIdentity();	
+}
 
 void Transform::load()
 {
 	glPushMatrix();
 	glMultMatrixf(this->mat);
+
+	#ifdef _DBG
+		for (int i=0; i<4; i++) {
+			for (int j=0; j<4; j++)
+				printf("%f ", this->mat[4*i+j]);
+			printf("\n");
+		}
+
+		printf("\n");
+	#endif
 }
 
 void Transform::unload()
@@ -27,10 +43,6 @@ void Transform::loadInv()
 
 void Transform::render()
 {
-	#ifdef _DBG
-		printf("Transform->render()\n");
-	#endif
-
 	load();
 	Group::render();
 	unload();
@@ -39,10 +51,6 @@ void Transform::render()
 int Transform::setupLights()
 {
 	int numLights;
-
-	#ifdef _DBG
-		printf("Transform->setupLights()\n");
-	#endif
 
 	load();
 	numLights = Group::setupLights();
@@ -54,10 +62,6 @@ int Transform::setupLights()
 int Transform::setupCamera()
 {
 	int camera;
-
-	#ifdef _DBG
-		printf("Transform->setupCamera()\n");
-	#endif
 
 	load();
 	camera = Group::setupCamera();
@@ -86,7 +90,18 @@ void Transform::translate(float dx, float dy, float dz)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glTranslatef(dx, dy, dz);
-	glGetFloatv(GL_MODELVIEW, this->mat);
+	glGetFloatv(GL_MODELVIEW_MATRIX, this->mat);
+
+	#ifdef _DBG
+		for (int i=0; i<4; i++) {
+			for (int j=0; j<4; j++)
+				printf("%f ", this->mat[4*i+j]);
+			printf("\n");
+		}
+
+		printf("\n");
+	#endif
+
 	glPopMatrix();
 }
 
@@ -97,5 +112,5 @@ void Transform::scale()
 
 void Transform::rotate()
 {
-	
+
 }

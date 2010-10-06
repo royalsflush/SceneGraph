@@ -13,6 +13,7 @@ class Transform : public Group {
 	void loadInv();
 
 	public:
+	Transform();
 	void render();
 	int setupLights();
 	int setupCamera();

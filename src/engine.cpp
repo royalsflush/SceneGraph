@@ -49,7 +49,8 @@ void Engine::handleResize(int w, int h)
 	#ifdef _DBG
 		printf("Engine->handleResize(%d, %d)\n", w, h);
 	#endif
-	
+
+	glMatrixMode(GL_MODELVIEW);	
 	glViewport(0, 0, w, h);
 
 	curr->changeAspect((float)w/(float)h);

@@ -13,8 +13,6 @@ Entity::Entity(Shape* s, Appearance* app) : shape(s), appearance(app) { }
 
 void Entity::render() 
 {
-	glMatrixMode(GL_MODELVIEW);
-
 	this->appearance->load();
 	this->shape->draw();
 	this->appearance->unload();

@@ -70,13 +70,13 @@ void handleResize(int w, int h)
 
 void render()
 {
-	Engine::getInstance().renderCurrentScene();
+	Engine::getInstance().renderCurrentScene();	
 }
 
 void createScene()
 {
 	Camera* theCamera = new Camera;
-	theCamera->setZPlanes(1.0f, 100.f);
+	theCamera->setZPlanes(1.0f, 100.0f);
 	theCamera->setEye(10.0f, 5.0f, 20.0f);
 	theCamera->setUp(0.0f, 1.0f, 0.0f);
 	theCamera->setCenter(10.0f, 3.0f, 10.0f);

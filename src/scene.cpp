@@ -13,11 +13,6 @@
 
 void Scene::render() 
 { 
-	#ifdef _DBG
-		printf("Scene->render()\n");
-	#endif
-
-
 	Group::setupCamera();
 	Group::setupLights();
 	Group::render();
@@ -25,10 +20,6 @@ void Scene::render()
 
 int Scene::setupCamera()
 {
-	#ifdef _DBG
-		printf("Scene->setupCamera()\n");
-	#endif
-
 	return Group::setupCamera();
 }
 
@@ -52,9 +43,5 @@ void Scene::setCamera(Camera* c)
 
 int Scene::setupLights()
 {
-	#ifdef _DBG
-		printf("Scene->setupLights()\n");
-	#endif
-		
 	return Group::setupLights();
 }

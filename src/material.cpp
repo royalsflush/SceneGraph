@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifdef __APPLE__
 	#include <OpenGL/OpenGL.h>
 	#include <GLUT/glut.h>
@@ -20,6 +22,7 @@ Material::Material(float r, float g, float b)
 	this->amb[G]=this->dif[G]=g;
 	this->amb[B]=this->dif[B]=b;
 	this->amb[A]=this->dif[A]=1.0f;
+	this->spec[A]=1.0f;
 }
 
 void Material::setSpecular(float r, float g, float b)
@@ -36,6 +39,10 @@ void Material::setShininess(int sh)
 
 void Material::load()
 {
+	#ifdef _DBG
+		printf("Loading material\n");
+	#endif
+
 	glPushAttrib(GL_LIGHTING);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, this->amb);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, this->dif);
@@ -45,5 +52,9 @@ void Material::load()
 
 void Material::unload()
 {
+	#ifdef _DBG
+		printf("Unloading material\n");
+	#endif
+
 	glPopAttrib();
 }

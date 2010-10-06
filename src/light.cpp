@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifdef __APPLE__
 	#include <OpenGL/OpenGL.h>
 	#include <GLUT/glut.h>
@@ -51,6 +53,10 @@ void Light::setDiffuse(float r, float g, float b, float a)
 
 int Light::setupLights()
 {
+	#ifdef _DBG
+		printf("Setup light0\n");
+	#endif
+
 	glEnable(GL_LIGHT0);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 	glLightfv(GL_LIGHT0, GL_POSITION, pos);
