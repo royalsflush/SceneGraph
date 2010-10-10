@@ -45,3 +45,8 @@ int Scene::setupLights()
 {
 	return Group::setupLights();
 }
+
+void Scene::setClearColor(float r, float g, float b, float a)
+{
+	glClearColor(r, g, b, a);
+}

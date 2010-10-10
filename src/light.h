@@ -8,8 +8,8 @@ class Light : public Node {
 	float amb[4];
 	float dif[4];
 	float spec[4];
-	char id[10];
-	static int genCount;
+	int ind;
+	static int lightCount;
 
 	public:
 	Light(float x, float y, float z, float w);

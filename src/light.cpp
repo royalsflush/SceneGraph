@@ -19,12 +19,17 @@ enum
 	R=0, G, B, A
 };
 
+int Light::lightCount = 0;
+
 Light::Light(float x, float y, float z, float w) 
 {
 	pos[X]=x;
 	pos[Y]=y;
 	pos[Z]=z;
 	pos[W]=w;	
+
+	this->ind = Light::lightCount;
+	Light::lightCount++;
 }
 
 void Light::setSpecular(float r, float g, float b, float a)
@@ -54,14 +59,14 @@ void Light::setDiffuse(float r, float g, float b, float a)
 int Light::setupLights()
 {
 	#ifdef _DBG
-		printf("Setup light0\n");
+		printf("Setup light%d\n", this->ind);
 	#endif
 
-	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-	glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
+	glEnable(this->ind);
+	glLightfv(this->ind, GL_AMBIENT, amb);
+	glLightfv(this->ind, GL_POSITION, pos);
+	glLightfv(this->ind, GL_DIFFUSE, dif);
+	glLightfv(this->ind, GL_SPECULAR, spec);
 
 	return 1;
 }

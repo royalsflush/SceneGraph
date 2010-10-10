@@ -3,13 +3,13 @@ CFLAGS=-O2
 LIBS = -lm
 SRC= main.cpp engine.cpp scene.cpp camera.cpp	\
      transform.cpp group.cpp cube.cpp entity.cpp light.cpp	\
-     sphere.cpp material.cpp
+     sphere.cpp material.cpp manipulator.cpp testScenes.cpp
 
 OUTPUT=out
 
 OBJ=$(SRC:.cpp=.o)
 
-CFLAGS+=$(DEBUG)
+CFLAGS+=-g
 
 ifeq ($(shell uname),Darwin)
 	LIBS+= -framework OpenGL -framework GLUT

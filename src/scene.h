@@ -15,6 +15,7 @@ class Scene : public Group {
 	
 	void changeAspect(float nasp);
 	void setCamera(Camera* c);
+	void setClearColor(float r, float g, float b, float a);
 };
 
 #endif /* SG_SCENE_H */

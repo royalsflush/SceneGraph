@@ -14,6 +14,11 @@ enum
 	X=0, Y, Z
 };
 
+Camera::Camera()
+{
+	this->man = NULL;
+}
+
 void Camera::setEye(float x, float y, float z) 
 {
 	this->eye[X]=x; 
@@ -44,6 +49,9 @@ void Camera::setZPlanes(float near, float far)
 {
 	this->znear=near;
 	this->zfar=far;
+
+	if (this->man)
+		this->man->SetZCenter((near+far)/2.0);
 }
 
 void Camera::setAspectRatio(float asp)
@@ -64,6 +72,9 @@ int Camera::setupCamera()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	if (this->man)
+		this->man->Load();
+
 	gluLookAt(this->eye[X], this->eye[Y], this->eye[Z],
 		this->center[X], this->center[Y], this->center[Z],
 		this->up[X], this->up[Y], this->up[Z]);
@@ -75,4 +86,11 @@ int Camera::setupLights()
 { 
 	return 0;
 }
+
 void Camera::render() { }
+
+void Camera::setManipulator(VManipulator* m)
+{
+	this->man = m;
+	this->man->SetZCenter((this->znear+this->zfar)/2.0);
+}

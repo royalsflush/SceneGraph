@@ -89,6 +89,9 @@ void Transform::translate(float dx, float dy, float dz)
 {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
+
+	glLoadIdentity();
+	glMultMatrixf(this->mat);
 	glTranslatef(dx, dy, dz);
 	glGetFloatv(GL_MODELVIEW_MATRIX, this->mat);
 
@@ -105,12 +108,48 @@ void Transform::translate(float dx, float dy, float dz)
 	glPopMatrix();
 }
 
-void Transform::scale()
+void Transform::scale(float dx, float dy, float dz)
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 
+	glLoadIdentity();
+	glMultMatrixf(this->mat);
+	glScalef(dx, dy, dz);
+	glGetFloatv(GL_MODELVIEW_MATRIX, this->mat);
+
+	#ifdef _DBG
+		for (int i=0; i<4; i++) {
+			for (int j=0; j<4; j++)
+				printf("%f ", this->mat[4*i+j]);
+			printf("\n");
+		}
+
+		printf("\n");
+	#endif
+
+	glPopMatrix();
 }
 
-void Transform::rotate()
+void Transform::rotate(float angle, float vx, float vy, float vz)
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 
+	glLoadIdentity();
+	glMultMatrixf(this->mat);
+	glRotatef(angle, vx, vy, vz);
+	glGetFloatv(GL_MODELVIEW_MATRIX, this->mat);
+
+	#ifdef _DBG
+		for (int i=0; i<4; i++) {
+			for (int j=0; j<4; j++)
+				printf("%f ", this->mat[4*i+j]);
+			printf("\n");
+		}
+
+		printf("\n");
+	#endif
+
+	glPopMatrix();
 }
