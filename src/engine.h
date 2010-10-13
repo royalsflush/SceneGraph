@@ -18,7 +18,7 @@ class Engine {
 	void renderCurrentScene();
 	void changeScene();
 	void handleResize(int w, int h);
-	//void handleKeyPress(unsigned char k, int x, int y);
+	void handleKeyPress(unsigned char k, int x, int y);
 };
 
 #endif /* ENGINE_H */

@@ -35,20 +35,11 @@ int main(int argc, char ** argv)
 	createScene();
 	
 	glutDisplayFunc(render);
-	glutKeyboardFunc(handleKeyPress);
 	glutReshapeFunc(handleResize);
 	
 	glutMainLoop();
 
 	return 0;
-}
-
-void handleKeyPress(unsigned char k, int x, int y)
-{
-	switch (k) {
-		case 27: //ESC
-			exit(0);
-	}
 }
 
 void initRender()

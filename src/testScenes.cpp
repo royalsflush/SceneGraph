@@ -9,6 +9,7 @@
 #include "manipulator.h"
 #include "sphere.h"
 #include "cube.h"
+#include "switch.h"
 
 Scene* demoScene(float w, float h)
 {
@@ -36,13 +37,9 @@ Scene* demoScene(float w, float h)
 	Entity* box = new Entity(new Cube(5.0f, 1.0f, 5.0f), redPlastic);
 	Entity* ball = new Entity(new Sphere(1.0f), greenPlastic);
 
-	Transform* rt = new Transform;
-	rt->rotate(30, 0.0f, 0.0f, 0.0f);
-
 	Transform* transl = new Transform;
 	transl->translate(10.0f, 2.5f, 10.0f);
 	transl->addNode(box);
-	rt->addNode(transl);
 
 	Transform* tr2 = new Transform;
 	tr2->translate(0.0f, 1.5f, 0.0f); 
@@ -58,7 +55,7 @@ Scene* demoScene(float w, float h)
 	theScene->addNode(theCamera);
 	theScene->setCamera(theCamera);
 	theScene->addNode(l0);
-	theScene->addNode(rt);
+	theScene->addNode(transl);
 
 	return theScene;
 }
@@ -71,29 +68,41 @@ Scene* lightsTestScene(float w, float h)
 
 	Camera* theCamera = new Camera;
 	theCamera->setZPlanes(1.0f, 100.0f);
-	theCamera->setEye(0.0f, 0.0f, 20.0f);
+	theCamera->setEye(0.0f, 0.0f, 10.0f);
 	theCamera->setUp(0.0f, 1.0f, 0.0f);
 	theCamera->setCenter(0.0f, 0.0f, 0.0f);
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
 	theCamera->setManipulator(new VManipulator);
 
-	Material* whitePlastic = new Material(0.5f, 0.5f, 0.0f);
-	whitePlastic->setSpecular(0.3f, 0.3f, 0.3f);
-	whitePlastic->setShininess(128);
+	Material* bluePlastic = new Material(0.0f, 0.0f, 0.6f);
+	bluePlastic->setSpecular(0.6f, 0.2f, 0.2f);
+	bluePlastic->setShininess(128);
 
-	Entity* ball = new Entity(new Sphere(2.0f), whitePlastic);
-	
-	Light* l0 = new Light(0.0f, 4.0f, 0.0f, 1.0f);
-	l0->setAmbient(0.4f, 0.4f, 0.4f, 1.0f);
+	Entity* ball = new Entity(new Sphere(1.0f), bluePlastic);
+
+	/* Luz no infinito */	
+	Light* l0 = new Light(0.0f, 10.0f, 0.0f, 0.0f);
+	l0->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
 	l0->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
 	l0->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+
+	l0->setSwitch(new Switch);
 	
+	/* Luz de spot vindo pelo lado direito */
+	Light* l1 = new Light(4.0f, 0.0f, 0.0f, 1.0f);
+	l1->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	l1->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
+	l1->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	l1->setSpotDir(-1.0f, 0.0f, 0.0f);
+	l1->setSpotCutoff(45);
+
 	Scene* theScene = new Scene;
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	theScene->addNode(theCamera);
 	theScene->setCamera(theCamera);
 	theScene->addNode(l0);
+	theScene->addNode(l1);
 	theScene->addNode(ball);
 
 	return theScene;
@@ -101,5 +110,7 @@ Scene* lightsTestScene(float w, float h)
 
 Scene* tableScene(float w, float h)
 {
-
+	#ifdef _DBG
+		printf("Setting up the table scene\n");
+	#endif 
 }
