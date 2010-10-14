@@ -18,7 +18,7 @@ class Transform : public Group {
 	int setupLights();
 	int setupCamera();
 
-	void rotate(float angle, float vx, float vz, float vz);
+	void rotate(float angle, float vx, float vy, float vz);
 	void translate(float dx, float dy, float dz);
 	void scale(float dx, float dy, float dz);
 	void loadIdentity();
