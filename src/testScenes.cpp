@@ -145,12 +145,44 @@ Scene* meshTest(float w, float h)
 	l0->setDiffuse(0.5f, 0.5f, 0.5f, 1.0f);
 	l0->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
 
+	Light* l2 = new Light(0.0f, -4.0f, 4.0f, 1.0f);
+	l2->setAmbient(0.0f, 0.2f, 0.2f, 1.0f);
+	l2->setDiffuse(0.0f, 0.5f, 0.5f, 1.0f);
+	l2->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	l2->setSpotDir(0.0f, 1.0f, -1.0f);
+	l2->setSpotCutoff(60);
+	l2->setSpotExp(128);
+
+	Transform *t1 = new Transform;
+	t1->translate(-0.8f, -1.0f, 6.0f);
+	t1->addNode(bunny);
+	t1->addNode(l2);
+
+	Transform *t2 = new Transform;
+	t2->translate(2.0f, -1.0f, 2.0f);
+	t2->addNode(bunny);
+	t2->addNode(l2);
+	
+	Transform *t3 = new Transform;
+	t3->translate(-0.5f, 0.0f, -5.0f);
+	t3->addNode(bunny);
+	t3->addNode(l2);
+	
 	Scene* theScene = new Scene;
-	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	theScene->setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	theScene->addNode(theCamera);
 	theScene->setCamera(theCamera);
-	theScene->addNode(bunny);
+	theScene->addNode(t1);
+	theScene->addNode(t2);
+	theScene->addNode(t3);
 	theScene->addNode(l0);
+	theScene->setGlobalLight(0.4, 0.1, 0.1, 1.0f);
+	theScene->twoSidedLighting(true);
+	theScene->localViewer(true);
+	theScene->enableFog(true);
+	theScene->setFogColor(0.8f, 0.8f, 0.8f, 1.0f);
+	theScene->setFogMode(linear);
+	theScene->setFogLim(4.0, 10.0);
 
 	return theScene;
 }

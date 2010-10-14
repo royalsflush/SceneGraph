@@ -10,9 +10,16 @@
 #include "group.h"
 #include "scene.h"
 #include "camera.h"
+#include "environ.h"
+
+Scene::Scene()
+{
+	this->cam=NULL;
+	env = new Environ;
+}
 
 void Scene::render() 
-{ 
+{
 	Group::setupCamera();
 	Group::setupLights();
 	Group::render();
@@ -48,5 +55,45 @@ int Scene::setupLights()
 
 void Scene::setClearColor(float r, float g, float b, float a)
 {
-	glClearColor(r, g, b, a);
+	env->setClearColor(r, g, b, a);
+}
+
+void Scene::setGlobalLight(float r, float g, float b, float a)
+{
+	env->setGlobalLight(r, g, b, a);
+}
+
+void Scene::twoSidedLighting(bool b)
+{
+	env->twoSidedLighting(b);
+}
+
+void Scene::localViewer(bool b)
+{
+	env->localViewer(b);
+}
+
+void Scene::enableFog(bool b)
+{
+	env->enableFog(b);
+}
+
+void Scene::setFogColor(float r, float g, float b, float a)
+{
+	env->setFogColor(r, g, b, a);
+}
+
+void Scene::setFogLim(float start, float end)
+{
+	env->setFogLim(start, end);
+}
+
+void Scene::setFogDensity(float d)
+{
+	env->setFogDensity(d);
+}
+
+void Scene::setFogMode(fogModes f)
+{
+	env->setFogMode(f);
 }
