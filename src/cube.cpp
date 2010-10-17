@@ -52,7 +52,7 @@ void Cube::buildCube()
 		
 			 this->norm[3*k] = 0.0f;
 			 this->norm[3*k+1] = 0.0f;
-			 this->norm[3*k+2] = 1.0f;
+			 this->norm[3*k+2] = -1.0f;
 		}
 	}
 	
