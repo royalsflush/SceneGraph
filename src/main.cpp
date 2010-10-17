@@ -66,5 +66,5 @@ void render()
 
 void createScene()
 {
-	Engine::getInstance().setScene(meshTest(WIN_W, WIN_H));
+	Engine::getInstance().setScene(tessCube(WIN_W, WIN_H));
 }

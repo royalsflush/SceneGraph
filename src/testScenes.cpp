@@ -12,6 +12,65 @@
 #include "switch.h"
 #include "mesh.h"
 
+Scene* tessCube(float w, float h)
+{
+	Camera* theCamera = new Camera;
+	theCamera->setZPlanes(1.0f, 100.0f);
+	theCamera->setEye(0.0f, 0.0f, 10.0f);
+	theCamera->setUp(0.0f, 1.0f, 0.0f);
+	theCamera->setCenter(0.0f, 0.0f, 0.0f);
+	theCamera->setAspectRatio(w/h);
+	theCamera->setAngle(50.0f);
+	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(10.0f);
+
+	Material* bluePlastic = new Material(0.5f, 0.5f, 0.5f);
+	bluePlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	bluePlastic->setShininess(30);
+
+	Entity* ball = new Entity(new Cube(2.0f, 2.0f, 2.0f), bluePlastic);
+
+	/* Luz verde vindo de cima */	
+	Light* l0 = new Light(0.0f, 3.0f, 0.0f, 1.0f);
+	l0->setAmbient(0.0f, 0.2f, 0.0f, 1.0f);
+	l0->setDiffuse(0.0f, 0.6f, 0.0f, 1.0f);
+	l0->setSpecular(0.0f, 0.5f, 0.0f, 1.0f);
+	l0->setSpotDir(0.0f, -1.0f, 0.0f);
+	l0->setSpotCutoff(80);
+	l0->setSpotExp(90);
+
+	l0->setSwitch(new Switch);
+	
+	/* Luz de spot vindo pelo lado direito - vermelha */
+	Light* l1 = new Light(3.0f, 0.0f, 0.0f, 1.0f);
+	l1->setAmbient(0.2f, 0.0f, 0.0f, 1.0f);
+	l1->setDiffuse(0.6f, 0.0f, 0.0f, 1.0f);
+	l1->setSpecular(0.5f, 0.0f, 0.0f, 1.0f);
+	l1->setSpotDir(-1.0f, 0.0f, 0.0f);
+	l1->setSpotCutoff(30);
+	l1->setSpotExp(30);
+
+	/* Luz de spot vindo de baixo, muito concentrada - ciano */
+	Light* l2 = new Light(0.0f, -3.0f, 3.0f, 1.0f);
+	l2->setAmbient(0.0f, 0.2f, 0.2f, 1.0f);
+	l2->setDiffuse(0.0f, 0.5f, 0.5f, 1.0f);
+	l2->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	l2->setSpotDir(0.0f, 1.0f, -1.0f);
+	l2->setSpotCutoff(60);
+	l2->setSpotExp(128);
+
+	Scene* theScene = new Scene;
+	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	theScene->addNode(theCamera);
+	theScene->setCamera(theCamera);
+	theScene->addNode(l0);
+	theScene->addNode(l1);
+	theScene->addNode(l2);
+	theScene->addNode(ball);
+
+	return theScene;
+}
+
 Scene* demoScene(float w, float h)
 {
 	#ifdef _DBG
@@ -26,6 +85,7 @@ Scene* demoScene(float w, float h)
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
 	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(10.0f);
 
 	Material* redPlastic = new Material(0.5f, 0.0f, 0.0f);
 	redPlastic->setSpecular(0.5f, 0.5f, 0.5f);

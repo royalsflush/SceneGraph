@@ -20,6 +20,7 @@ class Camera : public Node {
 	void setCenter(float x, float y, float z);
 	void setUp(float x, float y, float z);
 	void setZPlanes(float near, float far);
+	void setZCenter(float zcent);
 	void setAngle(float alpha);
 	void setManipulator(VManipulator* m);
 	void setAspectRatio(float asp);

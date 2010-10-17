@@ -49,14 +49,17 @@ void Camera::setZPlanes(float near, float far)
 {
 	this->znear=near;
 	this->zfar=far;
-
-	if (this->man)
-		this->man->SetZCenter((near+far)/2.0);
 }
 
 void Camera::setAspectRatio(float asp)
 {
 	this->aspect=asp;
+}
+
+void Camera::setZCenter(float zcent)
+{
+	if (this->man)
+		this->man->SetZCenter(zcent);
 }
 
 int Camera::setupCamera() 
