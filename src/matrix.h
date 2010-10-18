@@ -1,11 +1,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <assert.h>
 #include <stdarg.h>
-
-#define TRACE(x...) x
-#define PRINT(x...) TRACE(printf(x))
+#include <assert.h>
 
 template <typename T>
 
@@ -25,6 +22,8 @@ class Matrix {
 	bool isSparse(); //ok
 	void identity(); //ok
 	void set(int r, int c, ...); //check floating points
+
+	void setFromArray(int r, int c, T* vec);
 	void t(); //ok
 	const Matrix invert();
 	T det(); //not working
@@ -35,6 +34,7 @@ class Matrix {
 	int getR() const; //ok
 	int getC() const; //ok
 
+	//Assignments
 	Matrix& operator=(const Matrix&); //ok
 
 	// Unary minus
@@ -58,8 +58,6 @@ class Matrix {
 	operator T*();
 	T* operator[](const int); //ok
 };
-
-
 
 //------------- Constructors -------------//
 
@@ -181,45 +179,19 @@ void Matrix<T>::set(int r, int c, ...)
 
 	va_end(args);
 }
-
-	template <>
-void Matrix<float>::set(int r, int c, ...)
+	template<typename T>
+void Matrix<T>::setFromArray(int r, int c, T* vec)
 {
 	if (this->r!=r || this->c!=c) {
 		delete[] this->mat;
 		this->r=r; this->c=c;	
-		this->mat = new float[r*c];
-	}	
-
-	va_list args;
-	va_start(args, c);
+		this->mat = new T[r*c];
+	}
 
 	for (int i=0; i<r; i++) {
 		for (int j=0; j<c; j++)
-			this->mat[i*c+j]= (float) va_arg(args, double);
+			this->mat[i*c+j]=vec[i*c+j];
 	}
-
-	va_end(args);
-}
-
-	template <>
-void Matrix<short>::set(int r, int c, ...)
-{
-	if (this->r!=r || this->c!=c) {
-		delete[] this->mat;
-		this->r=r; this->c=c;	
-		this->mat = new short[r*c];
-	}
-
-	va_list args;
-	va_start(args, c);
-
-	for (int i=0; i<r; i++) {
-		for (int j=0; j<c; j++)
-			this->mat[i*c+j]= (short) va_arg(args, int);
-	}
-
-	va_end(args);
 }
 
 //---------- Operations on the matrix ------//
@@ -305,7 +277,8 @@ T Matrix<T>::det()
 	template <typename T>
 const Matrix<T> Matrix<T>::invert()
 {
-	assert(this->det());
+	//Using Gaussian-Jordan elimination, O(n^3)
+	//assert(this->det());
 }
 
 	template <typename T>
@@ -345,7 +318,8 @@ T Matrix<T>::getPos(int i, int j) const
 //Casts matrix to an array of size r*c. This vector is
 //dependent to the matrix class, so the user should copy
 //it before destroying the matrix it is attached to (if
-//he/she wishes to maintain the array 
+//he/she wishes to maintain the array)
+ 
 	template <typename T>
 Matrix<T>::operator T*()
 {
@@ -479,6 +453,5 @@ T* Matrix<T>::operator[](const int i)
 {
 	return &(this->mat[i*this->c]);
 }
-
 
 #endif /* MATRIX_H */

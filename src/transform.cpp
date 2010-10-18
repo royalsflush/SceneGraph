@@ -8,11 +8,7 @@
 #endif
 
 #include "transform.h"
-
-Transform::Transform()
-{
-	loadIdentity();	
-}
+#include "matrix.h"
 
 void Transform::load()
 {
@@ -22,7 +18,7 @@ void Transform::load()
 	#ifdef _DBG
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++)
-				printf("%f ", this->mat[4*i+j]);
+				printf("%f ", mat[i][j]);
 			printf("\n");
 		}
 
@@ -62,31 +58,36 @@ int Transform::setupLights()
 int Transform::setupCamera()
 {
 	int camera;
-
+	
 	load();
 	camera = Group::setupCamera();
 	unload();
 
-	return camera;
-}
+	//loadInv();
 
-void Transform::loadIdentity()
-{
-	for (int i=0; i<4; i++) {
-		for (int j=0; j<4; j++)
-			if (i==j) mat[4*i+j]=1;
-			else mat[4*i+j]=0;
-	}
-	
-	for (int i=0; i<4; i++) {
-		for (int j=0; j<4; j++)
-			if (i==j) inv[4*i+j]=1;
-			else inv[4*i+j]=0;
-	}
+	return camera;
 }
 
 void Transform::translate(float dx, float dy, float dz)
 {
+/*	Matrix<float> tmp;
+	tmp.set(4, 4,
+		1, 0, 0, dx,
+		0, 1, 0, dy,
+		0, 0, 1, dz,
+		0, 0, 0, 1);
+
+	this->mat*=tmp;
+	tmp=this->inv;
+
+	this->inv.set(4, 4,
+		1, 0, 0, -dx,
+		0, 1, 0, -dy,
+		0, 0, 1, -dz,
+		0, 0, 0, 1);
+
+	this->inv*=tmp; */
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -95,10 +96,11 @@ void Transform::translate(float dx, float dy, float dz)
 	glTranslatef(dx, dy, dz);
 	glGetFloatv(GL_MODELVIEW_MATRIX, this->mat);
 
+
 	#ifdef _DBG
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++)
-				printf("%f ", this->mat[4*i+j]);
+				printf("%f ", this->mat[i][j]);
 			printf("\n");
 		}
 
@@ -121,7 +123,7 @@ void Transform::scale(float dx, float dy, float dz)
 	#ifdef _DBG
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++)
-				printf("%f ", this->mat[4*i+j]);
+				printf("%f ", this->mat[i][j]);
 			printf("\n");
 		}
 
@@ -144,7 +146,7 @@ void Transform::rotate(float angle, float vx, float vy, float vz)
 	#ifdef _DBG
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++)
-				printf("%f ", this->mat[4*i+j]);
+				printf("%f ", mat[i][j]);
 			printf("\n");
 		}
 
