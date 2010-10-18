@@ -135,6 +135,7 @@ Scene* lightsTestScene(float w, float h)
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
 	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(10.0f);
 
 	Material* bluePlastic = new Material(0.5f, 0.5f, 0.5f);
 	bluePlastic->setSpecular(0.5f, 0.5f, 0.5f);
