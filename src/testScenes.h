@@ -3,6 +3,7 @@
 
 class Scene;
 
+Scene* tex(float w, float h);
 Scene* tessCube(float w, float h);
 Scene* demoScene(float w, float h);
 Scene* lightsTestScene(float w, float h);

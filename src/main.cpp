@@ -66,5 +66,5 @@ void render()
 
 void createScene()
 {
-	Engine::getInstance().setScene(demoScene(WIN_W, WIN_H));
+	Engine::getInstance().setScene(tableScene(WIN_W, WIN_H));
 }

@@ -4,7 +4,8 @@ LIBS = -lm
 SRC= main.cpp engine.cpp scene.cpp camera.cpp	\
      transform.cpp group.cpp cube.cpp entity.cpp light.cpp	\
      sphere.cpp material.cpp manipulator.cpp testScenes.cpp \
-     switch.cpp mesh.cpp environ.cpp matrix.cpp 
+     switch.cpp mesh.cpp environ.cpp matrix.cpp texture.cpp \
+     imageloader.cpp 
   
 OUTPUT=out
 

@@ -11,6 +11,58 @@
 #include "cube.h"
 #include "switch.h"
 #include "mesh.h"
+#include "texture.h"
+
+Scene* tex(float w, float h) 
+{
+	#ifdef _DBG
+		printf("Setting up demo scene\n");
+	#endif
+
+	Camera* theCamera = new Camera;
+	theCamera->setZPlanes(1.0f, 100.0f);
+	theCamera->setEye(10.0f, 5.0f, 20.0f);
+	theCamera->setUp(0.0f, 1.0f, 0.0f);
+	theCamera->setCenter(10.0f, 3.0f, 10.0f);
+	theCamera->setAspectRatio(w/h);
+	theCamera->setAngle(50.0f);
+	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(10.0f);
+
+	Material* greenPlastic = new Material(0.0f, 0.5f, 0.0f);
+	greenPlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	greenPlastic->setShininess(128);
+
+	Texture* tex = new Texture("../images/vtr.bmp");
+	tex->setPlane(S, 1.0f, 0.0f, 0.0f, 0.0f, false);
+	tex->setPlane(T, 0.0f, -1.0f, 0.0f, 0.0f, false);
+
+	Entity* box = new Entity(new Cube(5.0f, 1.0f, 5.0f), tex);
+	Entity* ball = new Entity(new Sphere(1.0f), greenPlastic);
+
+	Transform* transl = new Transform;
+	transl->translate(10.0f, 2.5f, 10.0f);
+	transl->addNode(box);
+
+	Transform* tr2 = new Transform;
+	tr2->translate(0.0f, 1.5f, 0.0f); 
+	tr2->addNode(ball);
+	transl->addNode(tr2);
+
+	Light* l0 = new Light(10.0f, 20.0f, 10.0f, 1.0f);
+	l0->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	l0->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
+	l0->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+
+	Scene* theScene = new Scene;
+	theScene->addNode(theCamera);
+	theScene->setCamera(theCamera);
+	theScene->addNode(l0);
+	theScene->addNode(transl);
+
+	return theScene;
+
+}
 
 Scene* tessCube(float w, float h)
 {
@@ -252,5 +304,113 @@ Scene* tableScene(float w, float h)
 {
 	#ifdef _DBG
 		printf("Setting up the table scene\n");
-	#endif 
+	#endif
+
+	Camera* theCamera = new Camera;
+	theCamera->setZPlanes(1.0f, 100.0f);
+	theCamera->setEye(0.0f, 0.0f, 10.0f);
+	theCamera->setUp(0.0f, 1.0f, 0.0f);
+	theCamera->setCenter(0.0f, 0.0f, 0.0f);
+	theCamera->setAspectRatio(w/h);
+	theCamera->setAngle(50.0f);
+	theCamera->setManipulator(new VManipulator);
+
+/*
+	Texture* walls = new Texture("../images/walltext.bmp");
+	walls->setPlane(S, 0.2f, 0.0f, 0.0f, 0.0f, false);
+	walls->setPlane(T, 0.0f, 0.2f, 0.0f, 0.0f, false);
+*/
+
+	/* Codigo para a sala em si */
+
+	Material* walls = new Material(0.7f, 0.55f, 0.425f);
+	walls->setSpecular(0.5f, 0.435f, 0.375f);
+	walls->setShininess(60);
+	
+ 	Entity* room = new Entity(new Cube(20.0, 20.0f, 40.0f), walls);
+
+	/* Codigo para a luz comprida */
+
+	Transform* lightPos = new Transform;
+	lightPos->translate(0.0f, 9.0f, 0.0f);
+
+	Material* lightMat = new Material(1.0f, 1.0f, 1.0f);
+	lightMat->setSpecular(0.2f, 0.2f, 0.2f);
+	lightMat->setShininess(60);
+
+	Entity* lightObj = new Entity(new Cube(1.0f, 0.5f, 5.0f), lightMat);
+	lightPos->addNode(lightObj);
+
+	Light* bigLight1 = new Light(0.0f, 0.0f, 0.0f, 1.0f);
+	bigLight1->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	bigLight1->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
+	bigLight1->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight1->setSpotDir(0.0f, -1.0f, 0.0f);
+	bigLight1->setSpotCutoff(120);
+	bigLight1->setSpotExp(30);
+	
+	Light* bigLight2 = new Light(0.0f, 0.0f, 1.0f, 1.0f);
+	bigLight2->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	bigLight2->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
+	bigLight2->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight2->setSpotDir(0.0f, -1.0f, 0.0f);
+	bigLight2->setSpotCutoff(120);
+	bigLight2->setSpotExp(30);
+	
+	Light* bigLight3 = new Light(0.0f, 0.0f, -1.0f, 1.0f);
+	bigLight3->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	bigLight3->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
+	bigLight3->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight3->setSpotDir(0.0f, -1.0f, 0.0f);
+	bigLight3->setSpotCutoff(120);
+	bigLight3->setSpotExp(30);
+	
+	lightPos->addNode(bigLight1);
+	lightPos->addNode(bigLight3);
+	lightPos->addNode(bigLight2);
+
+	/* a mesa */
+
+	Transform* tablePos = new Transform;
+	tablePos->translate(7.0f, -10.0f, -15.0f);
+
+	Material* greyPlastic = new Material(0.5f, 0.5f, 0.5f);
+	greyPlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	greyPlastic->setShininess(90);
+
+	Entity* tableTop = new Entity(new Cube(5.0f, 0.2f, 8.0f), greyPlastic);
+	Transform* tableTopTransform = new Transform;
+	tableTopTransform->translate(0.0f, 2.5f, 0.0f);
+	tableTopTransform->addNode(tableTop);
+	tablePos->addNode(tableTopTransform);
+
+	Entity* tableLeg = new Entity(new Cube(0.5f, 2.0f, 8.0f), greyPlastic);
+	Transform* tableLegTransform = new Transform;
+	tableLegTransform->translate(0.0f, 1.4f, 0.0f);
+	tableLegTransform->addNode(tableLeg);
+	tablePos->addNode(tableLegTransform);
+
+	Entity* tableFoot = new Entity(new Cube(2.0f, 0.5f, 0.5f), greyPlastic);
+	Transform* tableFootT1 = new Transform;
+	tableFootT1->translate(0.0f, 0.25f, 3.75f);
+	tableFootT1->addNode(tableFoot);
+	tablePos->addNode(tableFootT1);
+	
+	Transform* tableFootT2 = new Transform;
+	tableFootT2->translate(0.0f, 0.25f, -3.75f);
+	tableFootT2->addNode(tableFoot);
+	tablePos->addNode(tableFootT2);
+
+	/* Montando a cena */
+
+	Scene* theScene = new Scene;
+	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	theScene->addNode(theCamera);
+	theScene->setCamera(theCamera);
+	
+	theScene->addNode(room);
+	theScene->addNode(lightPos);
+	theScene->addNode(tablePos);
+
+	return theScene;
 }
