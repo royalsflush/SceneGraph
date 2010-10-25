@@ -15,8 +15,8 @@
 
 using namespace std;
 
-#define WIN_W 400
-#define WIN_H 400
+#define WIN_W 800
+#define WIN_H 600
 
 void handleKeyPress(unsigned char k, int x, int y);
 void initRender();
@@ -66,5 +66,5 @@ void render()
 
 void createScene()
 {
-	Engine::getInstance().setScene(tableScene(WIN_W, WIN_H));
+	Engine::getInstance().setScene(tex(WIN_W, WIN_H));
 }

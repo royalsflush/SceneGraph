@@ -6,21 +6,28 @@
 #ifndef V_MANIPULATOR_H
 #define V_MANIPULATOR_H
 
-class VManipulator {
+#include "camMan.h"
+
+class VManipulator : public CamMan
+{
 	static VManipulator* s_current;
+
+	public:
+	static VManipulator* getCurrent();
+	static void setCurrent(VManipulator* manip);
+
+	VManipulator();
+	void setZCenter(float zcenter);
+	void load();
+	void loadInv() { } 
+	void identity();
+	void rotate(float angle, float rx, float ry, float rz);
+	void scale(float sx, float sy, float sz);
+
+	private:
 	float m_matrix[16];
 	float m_zcenter;
-	
-	public:
-		static VManipulator* GetCurrent ();
-		static void SetCurrent (VManipulator* manip);
 
-		VManipulator();
-		void SetZCenter (float zcenter);
-		void Load ();
-		void Identity();
-		void Rotate (float angle, float rx, float ry, float rz);
-		void Scale (float sx, float sy, float sz);
 };
 
 #endif

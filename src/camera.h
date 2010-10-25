@@ -2,12 +2,12 @@
 #define CAMERA_H
 
 #include "node.h"
-#include "manipulator.h"
+#include "camMan.h"
 
 class Camera : public Node {
 	float eye[3], center[3], up[3];
 	float fovy, aspect, znear, zfar;
-	VManipulator* man;
+	CamMan* man;
 
 	public:
 	Camera();
@@ -22,7 +22,7 @@ class Camera : public Node {
 	void setZPlanes(float near, float far);
 	void setZCenter(float zcent);
 	void setAngle(float alpha);
-	void setManipulator(VManipulator* m);
+	void setManipulator(CamMan* m);
 	void setAspectRatio(float asp);
 };
 

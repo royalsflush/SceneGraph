@@ -59,7 +59,7 @@ void Camera::setAspectRatio(float asp)
 void Camera::setZCenter(float zcent)
 {
 	if (this->man)
-		this->man->SetZCenter(zcent);
+		this->man->setZCenter(zcent);
 }
 
 int Camera::setupCamera() 
@@ -76,11 +76,14 @@ int Camera::setupCamera()
 	glLoadIdentity();
 
 	if (this->man)
-		this->man->Load();
+		this->man->load();
 
 	gluLookAt(this->eye[X], this->eye[Y], this->eye[Z],
 		this->center[X], this->center[Y], this->center[Z],
 		this->up[X], this->up[Y], this->up[Z]);
+
+	if (this->man)
+		this->man->loadInv();
 
 	return 1;
 }
@@ -92,8 +95,8 @@ int Camera::setupLights()
 
 void Camera::render() { }
 
-void Camera::setManipulator(VManipulator* m)
+void Camera::setManipulator(CamMan* m)
 {
 	this->man = m;
-	this->man->SetZCenter((this->znear+this->zfar)/2.0);
+	this->man->setZCenter((this->znear+this->zfar)/2.0);
 }

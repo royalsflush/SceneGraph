@@ -8,11 +8,11 @@ class Transform : public Group {
 	Matrix<float> mat;
 	Matrix<float> inv;
 
+	public:
 	void load();
 	void unload();
 	void loadInv();
-
-	public:
+	
 	void render();
 	int setupLights();
 	int setupCamera();

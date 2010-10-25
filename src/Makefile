@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS=-O2
+CFLAGS= #-O2
 LIBS = -lm
 SRC= main.cpp engine.cpp scene.cpp camera.cpp	\
      transform.cpp group.cpp cube.cpp entity.cpp light.cpp	\

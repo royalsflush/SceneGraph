@@ -46,26 +46,16 @@ static VVector map (int x, int y)
 	return v;
 }
 
-static void mouse(int button, int state, int x, int y)
+static void mouse (int button, int state, int x, int y)
 {
-	if (!VManipulator::GetCurrent())
+	if (!VManipulator::getCurrent())
 		return;
 	if (state == GLUT_DOWN) {
 		g_x0 = x; g_y0 = y;
-		if (button == GLUT_LEFT_BUTTON) {
+		if (button == GLUT_LEFT_BUTTON)
 			g_state = 'r';
-
-			#ifdef _DBG
-				printf("Pressed left button\n"); 
-			#endif
-		}
-		else if (button == GLUT_RIGHT_BUTTON) {
+		else if (button == GLUT_RIGHT_BUTTON)
 			g_state = 's';
-		
-			#ifdef _DBG
-				printf("Pressed right button\n"); 
-			#endif
-		}
 		else
 			g_state = ' ';
 	}
@@ -73,7 +63,7 @@ static void mouse(int button, int state, int x, int y)
 
 static void motion (int x, int y)
 {
-	if (!VManipulator::GetCurrent())
+	if (!VManipulator::getCurrent())
 		return;
 	int dx = abs(x-g_x0);
 	int dy = abs(y-g_y0);
@@ -82,44 +72,44 @@ static void motion (int x, int y)
 			VVector v0 = map(g_x0, g_y0);
 			VVector v1 = map(x, y);
 			VVector r = Cross(v0, v1);
-			VManipulator::GetCurrent()->Rotate(TORAD(2*asin(r.Length())),r.x,r.y,r.z);
+			VManipulator::getCurrent()->rotate(TORAD(2*asin(r.Length())),r.x,r.y,r.z);
 
 		}
 		else if (g_state == 's') {
 			int vp[4];
 			glGetIntegerv(GL_VIEWPORT,vp);
 			float f = dx > dy ? (float)(x-g_x0) / vp[2] : (float) (-y+g_y0) / vp[3];
-			VManipulator::GetCurrent()->Scale(1+f, 1+f, 1+f);
+			VManipulator::getCurrent()->scale(1+f, 1+f, 1+f);
 		}
 		g_x0 = x; g_y0 = y;
 		glutPostRedisplay();
 	}
 }
 
-void VManipulator::SetCurrent (VManipulator* manip)
+void VManipulator::setCurrent(VManipulator* manip)
 {
 	s_current = manip;
 }
 
-VManipulator* VManipulator::GetCurrent ()
+VManipulator* VManipulator::getCurrent()
 {
 	return s_current;
 }
 
 VManipulator::VManipulator()
 {
-	this->Identity();
+	identity();
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
-	SetCurrent(this);
+	setCurrent(this);
 }
 
-void VManipulator::SetZCenter (float zcenter)
+void VManipulator::setZCenter(float zcenter)
 {
 	m_zcenter = zcenter;
 }
 
-void VManipulator::Identity ()
+void VManipulator::identity()
 {
 	glPushAttrib(GL_TRANSFORM_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -130,7 +120,7 @@ void VManipulator::Identity ()
 	glPopAttrib();
 }
 
-void VManipulator::Rotate (float angle, float rx, float ry, float rz)
+void VManipulator::rotate(float angle, float rx, float ry, float rz)
 {
 	glPushAttrib(GL_TRANSFORM_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -143,7 +133,7 @@ void VManipulator::Rotate (float angle, float rx, float ry, float rz)
 	glPopAttrib();
 }
 
-void VManipulator::Scale (float sx, float sy, float sz)
+void VManipulator::scale(float sx, float sy, float sz)
 {
 	glPushAttrib(GL_TRANSFORM_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -156,7 +146,7 @@ void VManipulator::Scale (float sx, float sy, float sz)
 	glPopAttrib();
 }
 
-void VManipulator::Load ()
+void VManipulator::load()
 {
 	glTranslatef(0.0f, 0.0f, -m_zcenter);
 	glMultMatrixf(m_matrix);
