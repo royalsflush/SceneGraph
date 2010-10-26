@@ -78,8 +78,9 @@ void Transform::translate(float dx, float dy, float dz)
 		dx, dy, dz, 1.0f);
 
 	this->mat*=tmp;
+
 	tmp=this->inv;
-	tmp.set(4, 4,
+	this->inv.set(4, 4,
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -112,7 +113,7 @@ void Transform::scale(float dx, float dy, float dz)
 	assert(dx && dy && dz);
 
 	tmp=this->inv;
-	tmp.set(4, 4,
+	this->inv.set(4, 4,
 		1.0f/dx, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f/dy, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f/dz, 0.0f,

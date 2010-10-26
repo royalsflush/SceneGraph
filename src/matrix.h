@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 #include <assert.h>
+#include <stdio.h>
 
 template <typename T>
 
@@ -224,7 +225,7 @@ T Matrix<T>::det()
 			if (i==j) continue;
 			if (j>i && this->mat[i*(this->c)+j]!=0) lower=false;
 			else if (i<j && this->mat[i*(this->c)+j]!=0) upper=false;
-		}
+		}		
 	}
 
 	if (upper || lower) {
@@ -369,6 +370,8 @@ const Matrix<T> Matrix<T>::operator*(const Matrix<T>& a)
 
 	for (int i=0; i<this->r; i++) {
 		for (int j=0; j<a.getC(); j++) {		
+			res[i][j]=0;
+
 			for (int k=0; k<this->c; k++) {
 				res[i][j]+=this->mat[i*(this->c)+k]*a.getPos(k, j);
 			}
@@ -416,7 +419,19 @@ Matrix<T>& Matrix<T>::operator*=(const T a)
 	template <typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& a) 
 {	
-	*this = ((*this)*a);
+	assert(this->c == a.getR());
+
+	Matrix<T> res(this->r, a.getC());
+
+	for (int i=0; i<this->r; i++) {
+		for (int j=0; j<a.getC(); j++) {		
+			for (int k=0; k<this->c; k++) {
+				res[i][j]+=this->mat[i*(this->c)+k]*a.getPos(k, j);
+			}
+		}
+	}
+
+	*this=res;
 
 	return *this;
 }

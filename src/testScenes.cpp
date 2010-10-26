@@ -1,18 +1,24 @@
 #include "testScenes.h"
 #include "engine.h"
+
 #include "scene.h"
 #include "camera.h"
 #include "transform.h"
-#include "material.h"
-#include "entity.h"
 #include "light.h"
+
 #include "camMan.h"
 #include "manipulator.h"
+#include "fpview.h"
+#include "switch.h"
+
+#include "entity.h"
+
 #include "sphere.h"
 #include "cube.h"
-#include "switch.h"
 #include "mesh.h"
+
 #include "texture.h"
+#include "material.h"
 
 Scene* tex(float w, float h) 
 {
@@ -319,9 +325,7 @@ Scene* tableScene(float w, float h)
 	theCamera->setCenter(8.0f, -5.0f, 0.0f);
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
-	theCamera->setManipulator(new VManipulator);
-	theCamera->setZCenter(20.0f);
-
+	theCamera->setManipulator(new FPView);
 /*
 	Texture* walls = new Texture("../images/walltext.bmp");
 	walls->setPlane(S, 0.2f, 0.0f, 0.0f, 0.0f, false);

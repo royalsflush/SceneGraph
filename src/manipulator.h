@@ -19,10 +19,13 @@ class VManipulator : public CamMan
 	VManipulator();
 	void setZCenter(float zcenter);
 	void load();
-	void loadInv() { } 
 	void identity();
 	void rotate(float angle, float rx, float ry, float rz);
 	void scale(float sx, float sy, float sz);
+	
+	void loadInv() { } 
+	void setEyeCoords(float x, float y, float z) { }
+	void setCameraTransf(float* m) { }
 
 	private:
 	float m_matrix[16];

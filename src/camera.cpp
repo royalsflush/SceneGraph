@@ -24,6 +24,9 @@ void Camera::setEye(float x, float y, float z)
 	this->eye[X]=x; 
 	this->eye[Y]=y;
 	this->eye[Z]=z;
+
+	if (this->man)
+		this->man->setEyeCoords(this->eye[X], this->eye[Y], this->eye[Z]);
 }
 
 void Camera::setCenter(float x, float y, float z) 
@@ -99,4 +102,5 @@ void Camera::setManipulator(CamMan* m)
 {
 	this->man = m;
 	this->man->setZCenter((this->znear+this->zfar)/2.0);
+	this->man->setEyeCoords(this->eye[X], this->eye[Y], this->eye[Z]);
 }
