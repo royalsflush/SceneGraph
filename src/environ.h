@@ -11,7 +11,7 @@ class Environ {
 	void twoSidedLighting(bool b);
 	void localViewer(bool b);
 	void setupEnviron();
-	void setClearColor(float r, float b, float b, float a);
+	void setClearColor(float r, float g, float b, float a);
 	void enableFog(bool b);
 	void setFogColor(float r, float g, float b, float a);
 	void setFogDensity(float d);

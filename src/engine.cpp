@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "scene.h"
+#include "animation.h"
 
 Engine* Engine::theEngine = NULL;
 
@@ -69,4 +70,24 @@ void Engine::renderCurrentScene()
 		curr->render();
 
 	glutSwapBuffers();
+}
+
+void Engine::addAnimation(Animation* a, char* name)
+{
+	if (getAnimation.find(name) != getAnimation.end())
+		return;
+
+	getAnimation[name]=a;
+}
+
+Animation* Engine::getAnimationByName(char* name)
+{
+	return getAnimation[name];
+}
+
+void Engine::changeScene() {
+	map<string, Animation*>::iterator it = getAnimation.begin();
+
+	for (it; it!=getAnimation.end(); ++it)
+		if (it->second->isActive()) it->second->animate(0);
 }

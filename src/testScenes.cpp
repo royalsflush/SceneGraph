@@ -1,5 +1,6 @@
 #include "testScenes.h"
 #include "engine.h"
+#include "animation.h"
 
 #include "scene.h"
 #include "camera.h"
@@ -311,6 +312,7 @@ Scene* meshTest(float w, float h)
 Transform* buildChair(Texture* t, Material* m);
 Transform* buildTable(Material* m);
 Transform* buildBigLight();
+Transform* buildLamp();
 
 Scene* tableScene(float w, float h)
 {
@@ -325,7 +327,8 @@ Scene* tableScene(float w, float h)
 	theCamera->setCenter(8.0f, -5.0f, 0.0f);
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
-	theCamera->setManipulator(new FPView);
+	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(20.0f);
 /*
 	Texture* walls = new Texture("../images/walltext.bmp");
 	walls->setPlane(S, 0.2f, 0.0f, 0.0f, 0.0f, false);
@@ -334,19 +337,24 @@ Scene* tableScene(float w, float h)
 
 	/* Codigo para a sala em si */
 
-	Material* walls = new Material(0.7f, 0.7f, 0.5f);
-	walls->setSpecular(0.5f, 0.435f, 0.375f);
-	walls->setShininess(60);
+	Material* walls = new Material(0.3f, 0.3f, 0.3f);
+	walls->setSpecular(0.2f, 0.2f, 0.2f);
+	walls->setShininess(50);
 	
- 	Entity* room = new Entity(new Cube(20.0, 15.0f, 40.0f), walls);
+ 	Entity* room = new Entity(new Cube(20.0, 0.0f, 40.0f), walls);
+	Transform* roomT = new Transform;
+	roomT->translate(0.0f, -7.5f, 0.0f);
+	roomT->addNode(room);
 
 	Texture* wood = new Texture("../images/teakwood.bmp");
 	wood->setPlane(S, 1.0f, 0.0f, 0.0f, 0.0f, false); 
 	wood->setPlane(T, 0.0f, 1.0f, 0.0f, 0.0f, false); 
 	
-	Material* greyPlastic = new Material(0.5f, 0.5f, 0.5f);
+	Material* greyPlastic = new Material(0.2f, 0.2f, 0.2f);
 	greyPlastic->setSpecular(0.5f, 0.5f, 0.5f);
 	greyPlastic->setShininess(90);
+
+	Entity* ball = new Entity(new Sphere(1.0f), greyPlastic);
 	
 	/* Codigo para a luz comprida */
 	Transform* lightPos = buildBigLight();
@@ -356,6 +364,41 @@ Scene* tableScene(float w, float h)
 
 	/* cadeiras */
 	Transform* chairCont = buildChair(wood, greyPlastic); 
+	Transform** chairPos = new Transform*[5];
+
+	for (int i=0; i<5; i++)
+		chairPos[i] = new Transform;
+
+	chairPos[0]->rotate(90, 0.0f, 1.0f, 0.0f);
+	chairPos[0]->translate(-3.0f, 0.0f, 5.0f);
+
+	chairPos[1]->rotate(100, 0.0f, 1.0f, 0.0f);
+	chairPos[1]->translate(3.0f, 0.0f, 7.0f);
+
+	chairPos[2]->rotate(80, 0.0f, 1.0f, 0.0f);
+	chairPos[2]->translate(5.0f, 0.0, 0.0f);
+
+	chairPos[3]->rotate(95, 0.0f, 1.0f, 0.0f);
+	chairPos[3]->translate(-2.0f, 0.0f, -3.0f);
+
+	chairPos[4]->rotate(120, 0.0, 1.0f, 0.0f);
+	chairPos[4]->translate(6.0f, 0.0f, 5.0f);
+
+	for (int i=0; i<5; i++)
+		chairPos[i]->addNode(chairCont);
+
+	/* Coelho sobre uma cadeira */
+
+	Entity* bunny = new Entity(new Mesh("bunny.msh"), greyPlastic);
+	Transform* bunnyT = new Transform;
+	bunnyT->translate(0.5f, -5.2f, -0.3f);
+	bunnyT->addNode(bunny);
+	chairPos[4]->addNode(bunnyT); 
+
+	/* Luminaria com luz vermelha */
+
+	Transform* lampPos = buildLamp();
+	chairPos[2]->addNode(lampPos);
 
 	/* Montando a cena */
 
@@ -364,12 +407,98 @@ Scene* tableScene(float w, float h)
 	theScene->addNode(theCamera);
 	theScene->setCamera(theCamera);
 	
-	theScene->addNode(room);
+	theScene->addNode(roomT);
+	//theScene->addNode(ball);
 	theScene->addNode(lightPos);
 	theScene->addNode(tablePos);
-	theScene->addNode(chairCont);
+
+	for (int i=0; i<5; i++)
+		theScene->addNode(chairPos[i]);
+
+	//Fog!
+
+	theScene->enableFog(true);
+	theScene->setFogColor(0.2f, 0.2f, 0.2f, 1.0f);
+	theScene->setFogMode(linear);
+	theScene->setFogLim(5.0, 40.0);
+
 
 	return theScene;
+}
+
+Transform* buildLamp()
+{
+	Animation* prepareJump = new Animation;
+	Animation* jump = new Animation;	
+
+	Transform* luxPos = new Transform;
+
+	Material* redPlastic = new Material(0.6f, 0.0f, 0.0f);
+	redPlastic->setSpecular(0.2f, 0.2f, 0.2f);
+	redPlastic->setShininess(10);	
+	
+	Material* redLamp = new Material(0.2f, 0.2f, 0.2f);
+	redLamp->setSpecular(0.2f, 0.2f, 0.2f);
+	redLamp->setShininess(40);	
+
+	Entity* baseA = new Entity(new Mesh("luxor/base_a.msh"), redPlastic);
+	Entity* baseB = new Entity(new Mesh("luxor/base_b.msh"), redPlastic);
+	Transform* baseT = new Transform;
+	baseT->addNode(baseA);
+	baseT->addNode(baseB);
+	luxPos->addNode(baseT);
+
+	Entity* haste1 = new Entity(new Mesh("luxor/haste1.msh"), redPlastic);
+	Transform* haste1T = new Transform;
+	haste1T->translate(0.0f, 4.0f, 0.0f);
+	haste1T->addNode(haste1);
+	baseT->addNode(haste1T);
+	
+	Entity* haste2 = new Entity(new Mesh("luxor/haste2.msh"), redPlastic);
+	Transform* haste2T = new Transform;
+	haste2T->translate(0.0f, 17.15f, 0.0f);
+	haste2T->addNode(haste2);
+	haste1T->addNode(haste2T);
+	
+	Entity* haste3A = new Entity(new Mesh("luxor/haste3_a.msh"), redPlastic);
+	Transform* haste3T = new Transform;
+	haste3T->translate(0.0f, 16.78f, 0.0f);
+	haste3T->addNode(haste3A);
+	
+	Entity* haste3B = new Entity(new Mesh("luxor/haste3_b.msh"), redPlastic);
+	haste3T->addNode(haste3B);
+	haste2T->addNode(haste3T);
+	
+	Entity* cupulaA = new Entity(new Mesh("luxor/cupula_a.msh"), redPlastic);
+	Entity* cupulaB = new Entity(new Mesh("luxor/cupula_b.msh"), redPlastic);
+	Transform* cupulaT = new Transform;
+	cupulaT->translate(0.0f, 18.12f, 0.0f);
+	cupulaT->addNode(cupulaA);
+	cupulaT->addNode(cupulaB);
+	haste3T->addNode(cupulaT);
+	
+	Entity* lampada = new Entity(new Mesh("luxor/lampada.msh"), redLamp);
+	Transform* lampadaT = new Transform;
+	lampadaT->translate(0.0f, 8.4f, 9.0f);
+	lampadaT->addNode(lampada);
+	cupulaT->addNode(lampadaT);
+	
+	Light* bigLight1 = new Light(0.0f, 0.0f, 0.0f, 1.0f);
+	bigLight1->setAmbient(0.2f, 0.0f, 0.0f, 1.0f);
+	bigLight1->setDiffuse(0.2f, 0.0f, 0.0f, 1.0f);
+	bigLight1->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
+	bigLight1->setSpotDir(0.0f, -1.0f, 1.5f);
+	bigLight1->setSpotCutoff(60);
+	bigLight1->setSpotExp(60);
+	lampadaT->addNode(bigLight1);
+
+	// Setting the animations
+	jump->addTransformForKey(baseT, "baseT");
+
+	Engine::getInstance().addAnimation(jump, "jump");
+	Engine::getInstance().addAnimation(prepareJump, "prepareJump");
+
+	return luxPos;
 }
 
 Transform* buildBigLight()
@@ -385,32 +514,32 @@ Transform* buildBigLight()
 	lightPos->addNode(lightObj);
 
 	Light* bigLight1 = new Light(0.0f, 0.0f, 0.0f, 1.0f);
-	bigLight1->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
-	bigLight1->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
-	bigLight1->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight1->setAmbient(0.1f, 0.1f, 0.0f, 1.0f);
+	bigLight1->setDiffuse(0.1f, 0.1f, 0.1f, 1.0f);
+	bigLight1->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
 	bigLight1->setSpotDir(0.0f, -1.0f, 0.0f);
-	bigLight1->setSpotCutoff(120);
+	bigLight1->setSpotCutoff(80);
 	bigLight1->setSpotExp(30);
 	
 	Light* bigLight2 = new Light(0.0f, 0.0f, 1.0f, 1.0f);
-	bigLight2->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
-	bigLight2->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
-	bigLight2->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight2->setAmbient(0.1f, 0.0f, 0.1f, 1.0f);
+	bigLight2->setDiffuse(0.1f, 0.1f, 0.1f, 1.0f);
+	bigLight2->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
 	bigLight2->setSpotDir(0.0f, -1.0f, 0.0f);
-	bigLight2->setSpotCutoff(120);
+	bigLight2->setSpotCutoff(80);
 	bigLight2->setSpotExp(30);
 	
 	Light* bigLight3 = new Light(0.0f, 0.0f, -1.0f, 1.0f);
-	bigLight3->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
-	bigLight3->setDiffuse(0.6f, 0.6f, 0.6f, 1.0f);
-	bigLight3->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	bigLight3->setAmbient(0.0f, 0.1f, 0.1f, 1.0f);
+	bigLight3->setDiffuse(0.1f, 0.1f, 0.1f, 1.0f);
+	bigLight3->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
 	bigLight3->setSpotDir(0.0f, -1.0f, 0.0f);
-	bigLight3->setSpotCutoff(120);
+	bigLight3->setSpotCutoff(80);
 	bigLight3->setSpotExp(30);
 	
 	lightPos->addNode(bigLight1);
-	lightPos->addNode(bigLight3);
 	lightPos->addNode(bigLight2);
+	lightPos->addNode(bigLight3);
 
 	return lightPos;
 }
@@ -516,4 +645,52 @@ Transform* buildChair(Texture* t, Material* m)
 	chairCont->addNode(tableSupT2);	 
 
 	return chairCont;
+}
+
+// Here starts the code to lamp animation
+
+void setUpAnimations() {
+	Animation* jump = Engine::getInstance().getAnimationByName("jump");
+	float pos1[3] = {0.0, 0.0, 0.0};
+	float pos2[3] = {0.0, 30.0, 40.0};
+	
+	jump->addActionInFrame("baseT", pos1, 't', 0);
+	jump->addActionInFrame("baseT", pos2, 't', 1);
+}
+
+Scene* pixarNotQuite(float w, float h) {
+	Camera* theCamera = new Camera;
+	theCamera->setZPlanes(1.0f, 100.0f);
+	theCamera->setEye(0.0f, 0.0f, 20.0f);
+	theCamera->setUp(0.0f, 1.0f, 0.0f);
+	theCamera->setCenter(0.0f, 0.0f, 0.0f);
+	theCamera->setAspectRatio(w/h);
+	theCamera->setAngle(50.0f);
+	theCamera->setManipulator(new VManipulator);
+	theCamera->setZCenter(40.0f);
+	
+	Transform* lamp = buildLamp();
+	lamp->scale(0.2f, 0.2f, 0.2f);
+	lamp->rotate(90, 0.0f, 1.0f, 0.0f);
+	lamp->translate(-3.0f, -3.0f, -40.0f);
+
+	Material* greenPlastic = new Material(0.0f, 0.5f, 0.0f);
+	greenPlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	greenPlastic->setShininess(128);
+	
+	Light* l0 = new Light(0.0f, 0.0f, 1.0f, 0.0f);
+	l0->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	l0->setDiffuse(0.2f, 0.2f, 0.2f, 1.0f);
+	l0->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
+
+	Scene* theScene = new Scene;
+	theScene->addNode(theCamera);
+	theScene->setCamera(theCamera);
+	theScene->addNode(l0);
+	theScene->addNode(lamp);
+	theScene->setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	setUpAnimations();
+
+	return theScene;
 }

@@ -13,7 +13,7 @@
 #include "matrix.h"
 
 #define SPEED 0.7
-#define DIST 200.0
+#define DIST 10.0
 
 #define MAX_X 8.5
 #define MAX_Z 18.5
@@ -29,8 +29,10 @@ FPView* FPView::curr = 0;
 
 static void motion(int x, int y);
 static void keyboard(unsigned char k, int x, int y);
+static Matrix<float> rotateAroundPt(float angle, float* axis, float* pt);
 
 static int lastX, lastY;
+static double angleX, angleY;
 
 void FPView::setCurrent(FPView* fp)
 {
@@ -46,6 +48,10 @@ FPView::FPView()
 {
 	glutPassiveMotionFunc(motion);
 	glutKeyboardFunc(keyboard);	
+	lastX = 0.0f;
+	lastY = 0.0f;
+
+	glutWarpPointer(0.0f, 0.0f);
 
 	this->setCurrent(this);
 }
@@ -58,23 +64,47 @@ void FPView::move(float x, float y, float z)
 	if (eye[Z]>=MAX_Z && z>0) return; 
 	if (eye[Z]<=-MAX_Z && z<0) return; 
 
-	Matrix<float> tmp(this->inv);
-	this->inv.set(4, 4,
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f ,0.0f, 0.0f,
-		0.0f, 0.0f ,1.0f, 0.0f,
-		-x, -y, -z, 1.0f);
+	Matrix<float> transl;
+	Matrix<float> rot;
 
-	this->inv*=tmp;	
+	float pt[3] = {-eye[X], -eye[Y], -eye[Z]};
+	float yaxis[3] = {0.0f, 1.0f, 0.0f};
+
+	transl.set(4, 4,
+		1.0f, 0.0f, 0.0f, -x,
+		0.0f, 1.0f ,0.0f, -y,
+		0.0f, 0.0f ,1.0f, -z,
+		0.0f, 0.0f, 0.0f, 1.0f);
+
+
+	rot = rotateAroundPt(angleX, yaxis, pt);
+	
+	transl.t();
+	transl=rot*transl;	
+	rot = rotateAroundPt(-angleX, yaxis, pt);
+	transl*=rot;
+	
+	this->inv=transl*(this->inv);	
+
+	//for (int i=0; i<3; i++)
+	//	pt[i]=-pt[i];
+
 
 	//Changing the eye coordinates
-	tmp.set(4, 4,
+	transl.set(4, 4,
 		1.0f, 0.0f, 0.0f, x,
 		0.0f, 1.0f ,0.0f, y,
 		0.0f, 0.0f ,1.0f, z,
 		0.0f, 0.0f, 0.0f, 1.0f);
 
-	updateEye(tmp);
+	rot = rotateAroundPt(angleX, yaxis, pt);
+	
+	transl.t();
+	transl=rot*transl;	
+	rot = rotateAroundPt(-angleX, yaxis, pt);
+	transl*=rot;	
+
+	updateEye(transl);
 }
 
 void FPView::updateEye(float* m)
@@ -121,72 +151,70 @@ void FPView::updateEye(float* m)
 
 void FPView::look(float angle, float x, float y, float z)
 {
+	float pt[3] = {-eye[X], -eye[Y], -eye[Z]};
+	float axis[3] = {x, y, z};
+	Matrix<float> rot = rotateAroundPt(angle, axis, pt);
+	this->inv=rot*(this->inv);
+}
+
+static Matrix<float> rotateAroundPt(float angle, float* axis, float* pt)
+{
 	Matrix<float> transl;
 	Matrix<float> rot;
 	
 	transl.set(4, 4,
-		1.0f, 0.0f, 0.0f, -eye[X],
-		0.0f, 1.0f ,0.0f, -eye[Y],
-		0.0f, 0.0f ,1.0f, -eye[Z],
+		1.0f, 0.0f, 0.0f, -pt[X],
+		0.0f, 1.0f ,0.0f, -pt[Y],
+		0.0f, 0.0f ,1.0f, -pt[Z],
 		0.0f, 0.0f, 0.0f, 1.0f);
 		
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
 	glLoadIdentity();
-	glRotatef(-angle, x, y, z);
+	glRotatef(-angle, axis[X], axis[Y], axis[Z]);
 	glGetFloatv(GL_MODELVIEW_MATRIX, rot);
-	rot.t();	
 
 	rot=transl*rot;
 
 	transl.set(4, 4,
-		1.0f, 0.0f, 0.0f, eye[X],
-		0.0f, 1.0f ,0.0f, eye[Y],
-		0.0f, 0.0f ,1.0f, eye[Z],
+		1.0f, 0.0f, 0.0f, pt[X],
+		0.0f, 1.0f ,0.0f, pt[Y],
+		0.0f, 0.0f ,1.0f, pt[Z],
 		0.0f, 0.0f, 0.0f, 1.0f);
 	
 	rot=rot*transl;		
 	rot.t();
 
-	//Rot agora e a inversa da matrix de rotacao em torno do olho
-	this->inv=rot*this->inv;
-	
 	glPopMatrix();
-
+	return rot;
 }
 
 static void motion(int x, int y)
 {
-	int dx = x - lastX;
-	int  dy = y - lastY;
 	bool changes = false;
 	Matrix<float> tmp;
-	
-	#ifdef _FPVIEW
-		printf("x: %d,  y: %d\n", x, y);
-	#endif
+	int dx = x - lastX;
+	int dy = y - lastY;
 
 	if (abs(dx)>1) {
-		#ifdef _FPVIEW
-			printf("dx: %d ", dx);
-		#endif
+		double angle = atan((double)dx);
+		
+		FPView::getCurrent()->look(TORAD(angle)/DIST, 0.0f, 1.0f, 0.0f);
+		angleX+=TORAD(angle)/DIST;
 
-		double angle = atan((double)dx/DIST);
-		
-		#ifdef _FPVIEW
-			printf("angle: %lf\n", TORAD(angle));
-		#endif
-		
-
-		FPView::getCurrent()->look(TORAD(angle), 0.0f, 1.0f, 0.0f);
-		
 		lastX=x;
 		changes=true;
 	}
 
-	if (dy>1) {
-		//changes=true;
+	if (abs(dy)>1) {
+		double angle = atan((double)dy);
+		angleY+=TORAD(angle)/DIST;
+
+	//	FPView::getCurrent()->look(TORAD(angle)/DIST, 1.0f, 0.0f, 0.0f);
+
+		lastY=y;
+		changes=true;
 	}
 
 	if (changes) glutPostRedisplay();
@@ -233,17 +261,17 @@ void FPView::loadInv()
 
 void FPView::setEyeCoords(float x, float y, float z)
 {
-	#ifdef _FPVIEW
-		printf("Setting up eye coordinates\n");
-	#endif
+#ifdef _FPVIEW
+	printf("Setting up eye coordinates\n");
+#endif
 
 	this->eye[X]=x;
 	this->eye[Y]=y;
 	this->eye[Z]=z;
-	
-	#ifdef _FPVIEW
-		printf("Eye is: %f, %f, %f\n", eye[X], eye[Y], eye[Z]);
-	#endif	
+
+#ifdef _FPVIEW
+	printf("Eye is: %f, %f, %f\n", eye[X], eye[Y], eye[Z]);
+#endif	
 }
 
 void FPView::setCameraTransf(float* m) { }

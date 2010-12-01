@@ -159,3 +159,18 @@ void Transform::rotate(float angle, float vx, float vy, float vz)
 
 	glPopMatrix();
 }
+
+void Transform::identity() 
+{
+	this->mat.identity();
+	this->inv.identity();	
+}
+
+void Transform::printMatrix()
+{
+	for (int i=0; i<4; i++) {
+		for (int j=0; j<4; j++)
+			printf("%.2f ", mat[i][j]);
+		printf("\n");
+	}
+}

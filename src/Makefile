@@ -5,14 +5,14 @@ SRC= main.cpp engine.cpp scene.cpp camera.cpp	\
      transform.cpp group.cpp cube.cpp entity.cpp light.cpp	\
      sphere.cpp material.cpp manipulator.cpp testScenes.cpp \
      switch.cpp mesh.cpp environ.cpp matrix.cpp texture.cpp \
-     imageloader.cpp fpview.cpp 
+     imageloader.cpp fpview.cpp animation.cpp 
   
 OUTPUT=out
 
 OBJ=$(SRC:.cpp=.o)
 
 CFLAGS+=-g
-DBGFLAGS = -D_FPVIEW #-D_DBG
+DBGFLAGS = -D_FPVIEW #-D_ANIM #-D_DBG
 
 ifeq ($(shell uname),Darwin)
 	LIBS+= -framework OpenGL -framework GLUT

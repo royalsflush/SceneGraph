@@ -11,6 +11,7 @@
 #endif
 
 #include "engine.h"
+#include "animation.h"
 #include "testScenes.h"
 
 using namespace std;
@@ -23,6 +24,7 @@ void initRender();
 void handleResize(int w, int h);
 void render();
 void createScene();
+void update(int value);
 
 int main(int argc, char ** argv)
 {
@@ -38,7 +40,8 @@ int main(int argc, char ** argv)
 	glutReshapeFunc(handleResize);
 	
 	createScene();
-	
+	glutTimerFunc(16, update, 0);
+
 	glutMainLoop();
 
 	return 0;
@@ -47,6 +50,11 @@ int main(int argc, char ** argv)
 void handleKeyPress(unsigned char k, int x, int y)
 {
 	if (k==27) exit(0);
+	else if (k == 'd') {
+		printf("Opa, right pressed!\n");
+		Animation* jump = Engine::getInstance().getAnimationByName("jump");
+		jump->startAnimation();
+	}
 }
 
 void initRender()
@@ -66,5 +74,12 @@ void render()
 
 void createScene()
 {
-	Engine::getInstance().setScene(tableScene(WIN_W, WIN_H));
+	Engine::getInstance().setScene(pixarNotQuite(WIN_W, WIN_H));
+}
+
+void update(int value)
+{
+	Engine::getInstance().changeScene();
+	glutPostRedisplay();
+	glutTimerFunc(16, update, 0);
 }

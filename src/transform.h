@@ -17,9 +17,12 @@ class Transform : public Group {
 	int setupLights();
 	int setupCamera();
 
+	void identity();
 	void rotate(float angle, float vx, float vy, float vz);
 	void translate(float dx, float dy, float dz);
 	void scale(float dx, float dy, float dz);
+
+	void printMatrix();
 };
 
 #endif /* SG_TRANSFORM_H */
