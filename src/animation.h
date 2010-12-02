@@ -63,10 +63,10 @@ class Animation {
 	bool isActive();
 
 	void setFrameDuration(float dur);
-	void addTransformForKey(Transform* t, char* key);
+	void addTransformForKey(Transform* t, const char* key);
 
 	//FrameNum starts with 0
-	void addActionInFrame(char* transformName, float* vec, char type, int frameNum);
+	void addActionInFrame(const char* transformName, float* vec, char type, int frameNum);
 
 	void startAnimation();
 	void animate(int value);

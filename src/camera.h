@@ -8,9 +8,10 @@ class Camera : public Node {
 	float eye[3], center[3], up[3];
 	float fovy, aspect, znear, zfar;
 	CamMan* man;
+	bool active;
 
 	public:
-	Camera();
+	Camera(const char* name);
 	
 	int setupCamera();
 	int setupLights();
@@ -24,6 +25,9 @@ class Camera : public Node {
 	void setAngle(float alpha);
 	void setManipulator(CamMan* m);
 	void setAspectRatio(float asp);
+
+	bool isActive();
+	void activate(bool yes);
 };
 
 #endif /* CAMERA_H */

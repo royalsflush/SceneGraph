@@ -14,7 +14,7 @@ class Texture : public Appearance {
 	unsigned int id;
 
 	public:
-	Texture(char* filename);
+	Texture(const char* filename);
 	void load();
 	void unload();
 	void setPlane(texcoord t, float a, float b, float c, float d, bool eyeCoord);

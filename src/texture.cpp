@@ -14,7 +14,7 @@
 
 int Texture::nextId=0;
 
-Texture::Texture(char* filename)
+Texture::Texture(const char* filename)
 {
 	Image* img = loadBMP(filename);
 	glGenTextures(1, &this->id);

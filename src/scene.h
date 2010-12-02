@@ -1,24 +1,30 @@
 #ifndef SG_SCENE_H
 #define SG_SCENE_H
 
+#include <map>
+#include <string>
+using namespace std;
+
 #include "group.h"
 #include "environ.h"
 
 class Camera;
 
 class Scene : public Group {
-	Camera* cam;
+	map<string, Camera*> cameraOpts;
+	Camera* currCam;
 	Environ* env;
 
 	public:
-	Scene();
+	Scene(const char* name);
 
 	int setupCamera();
 	int setupLights();
 	void render();	
 	
 	void changeAspect(float nasp);
-	void setCamera(Camera* c);
+	void addCamera(Camera* c, const char* name);
+	void activateCamera(const char* name); 
 	
 	void setClearColor(float r, float g, float b, float a);
 	void setGlobalLight(float r, float g, float b, float a);

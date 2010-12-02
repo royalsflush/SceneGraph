@@ -11,7 +11,7 @@ class Mesh : public Shape {
 	int nInd;
 
 	public:
-	Mesh(char* filename);
+	Mesh(const char* filename);
 	void draw();	
 };
 

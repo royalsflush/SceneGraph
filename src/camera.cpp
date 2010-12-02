@@ -14,10 +14,7 @@ enum
 	X=0, Y, Z
 };
 
-Camera::Camera()
-{
-	this->man = NULL;
-}
+Camera::Camera(const char* name) : Node(name, "Camera"), man(NULL), active(false) { }
 
 void Camera::setEye(float x, float y, float z) 
 {
@@ -71,6 +68,8 @@ int Camera::setupCamera()
 		printf("Camera->setupCamera()\n");
 	#endif
 
+	if (!this->active) return 0;
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(this->fovy, this->aspect, this->znear, this->zfar);
@@ -103,4 +102,14 @@ void Camera::setManipulator(CamMan* m)
 	this->man = m;
 	this->man->setZCenter((this->znear+this->zfar)/2.0);
 	this->man->setEyeCoords(this->eye[X], this->eye[Y], this->eye[Z]);
+}
+
+bool Camera::isActive()
+{
+	return this->active;
+}
+
+void Camera::activate(bool yes)
+{
+	this->active = yes;
 }

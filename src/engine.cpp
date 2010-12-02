@@ -72,7 +72,7 @@ void Engine::renderCurrentScene()
 	glutSwapBuffers();
 }
 
-void Engine::addAnimation(Animation* a, char* name)
+void Engine::addAnimation(Animation* a, const char* name)
 {
 	if (getAnimation.find(name) != getAnimation.end())
 		return;
@@ -80,7 +80,7 @@ void Engine::addAnimation(Animation* a, char* name)
 	getAnimation[name]=a;
 }
 
-Animation* Engine::getAnimationByName(char* name)
+Animation* Engine::getAnimationByName(const char* name)
 {
 	return getAnimation[name];
 }

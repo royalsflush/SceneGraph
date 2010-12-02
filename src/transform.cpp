@@ -11,6 +11,8 @@
 #include "transform.h"
 #include "matrix.h"
 
+Transform::Transform(const char* name) : Group(name, "Transform") { }
+
 void Transform::load()
 {
 	glPushMatrix();

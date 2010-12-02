@@ -10,7 +10,7 @@
 
 #include "mesh.h"
 
-Mesh::Mesh(char* filename)
+Mesh::Mesh(const char* filename)
 {
 	int ind;	
 	FILE* fp = fopen(filename, "rt");

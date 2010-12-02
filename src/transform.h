@@ -9,6 +9,8 @@ class Transform : public Group {
 	Matrix<float> inv;
 
 	public:
+	Transform(const char* name);
+
 	void load();
 	void unload();
 	void loadInv();

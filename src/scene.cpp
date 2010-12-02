@@ -12,9 +12,8 @@
 #include "camera.h"
 #include "environ.h"
 
-Scene::Scene()
+Scene::Scene(const char* name) : Group(name, "Scene"), currCam(NULL)
 {
-	this->cam=NULL;
 	env = new Environ;
 }
 
@@ -32,7 +31,7 @@ int Scene::setupCamera()
 
 void Scene::changeAspect(float nasp)
 {
-	if (!this->cam) {
+	if (!this->currCam) {
 		#ifdef _DBG
 			printf("Someone forgot to set up the camera!!\n");
 		#endif
@@ -40,13 +39,35 @@ void Scene::changeAspect(float nasp)
 		return;
 	}
 
-	this->cam->setAspectRatio(nasp);
+	this->currCam->setAspectRatio(nasp);
 }
 
-void Scene::setCamera(Camera* c)
+void Scene::addCamera(Camera* c, const char* name)
 {
-	this->cam=c;
+	if (cameraOpts.find(name) != cameraOpts.end())
+		return;
+
+	cameraOpts[name]=c;
+
+	if (!this->currCam) this->currCam =c;
+	this->currCam->activate(true);
 }
+
+void Scene::activateCamera(const char* name)
+{
+	if (!this->currCam) //there's no camera in the opts
+		return;
+
+	//there's no camera with this name
+	if (cameraOpts.find(name) == cameraOpts.end())
+		return;
+
+	this->currCam->activate(false);
+	this->currCam = cameraOpts[name];
+	this->currCam->activate(true);
+}
+
+/* This functions are just wrappers to the environ class */
 
 int Scene::setupLights()
 {

@@ -17,7 +17,7 @@ class Light : public Node {
 	static Switch* ctrlSwitch;
 
 	public:
-	Light(float x, float y, float z, float w);
+	Light(const char* name, float x, float y, float z, float w);
 	void setSpecular(float r, float g, float b, float a);
 	void setDiffuse(float r, float g, float b, float a);
 	void setAmbient(float r, float g, float b, float a);

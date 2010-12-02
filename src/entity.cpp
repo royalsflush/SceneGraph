@@ -9,7 +9,7 @@
 #include "shape.h"
 #include "appearance.h"
 
-Entity::Entity(Shape* s, Appearance* app) : shape(s), appearance(app) { }
+Entity::Entity(const char* name, Shape* s, Appearance* app) : Node(name, "Entity"), shape(s), appearance(app) { }
 
 void Entity::render() 
 {

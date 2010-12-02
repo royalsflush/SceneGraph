@@ -26,8 +26,8 @@ class Engine {
 	void handleResize(int w, int h);
 	void handleKeyPress(unsigned char k, int x, int y);
 
-	void addAnimation(Animation* a, char* name);
-	Animation* getAnimationByName(char* name);
+	void addAnimation(Animation* a, const char* name);
+	Animation* getAnimationByName(const char* name);
 };
 
 #endif /* ENGINE_H */

@@ -28,7 +28,7 @@ void Animation::setFrameDuration(float dur) {
 	this->frameDuration = dur;
 }
 
-void Animation::addTransformForKey(Transform* t, char* key) {
+void Animation::addTransformForKey(Transform* t, const char* key) {
 	if (getTransform.find(key) != getTransform.end())
 		return;
 
@@ -39,7 +39,7 @@ void Animation::addTransformForKey(Transform* t, char* key) {
 	getTransform[key] = t;
 }
 
-void Animation::addActionInFrame(char* transformName, float* vec, char type, int frameNum) {
+void Animation::addActionInFrame(const char* transformName, float* vec, char type, int frameNum) {
 	#ifdef _ANIM
 		printf("Adding action to %s, frame %d\n", transformName, frameNum);
 	#endif		

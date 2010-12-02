@@ -11,7 +11,7 @@ class Entity : public Node {
 	Appearance* appearance;
 
 	public:
-	Entity(Shape* s, Appearance* app);
+	Entity(const char* name, Shape* s, Appearance* app);
 	void render();
 	int setupCamera();
 	int setupLights();

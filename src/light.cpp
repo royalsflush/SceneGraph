@@ -23,7 +23,7 @@ enum
 int Light::lightCount = 0;
 Switch* Light::ctrlSwitch = NULL;
 
-Light::Light(float x, float y, float z, float w) 
+Light::Light(const char* name, float x, float y, float z, float w) : Node(name, "Light")
 {
 	pos[X]=x;
 	pos[Y]=y;

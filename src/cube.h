@@ -15,7 +15,7 @@ class Cube : public Shape {
 	int index(int i, int j);
 
 	public:
-	Cube(float x, float y, float z);
+	Cube( float x, float y, float z);
 	void setDiv(int numDivs);
 	void draw();
 };
