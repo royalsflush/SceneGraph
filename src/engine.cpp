@@ -75,6 +75,7 @@ void Engine::renderCurrentScene()
 void Engine::addAnimationToScene(Animation* a, const char* name)
 {
 	this->curr->addAnimation(a, name);
+	a->setScene(this->curr);
 }
 
 Animation* Engine::getAnimationByName(const char* name)

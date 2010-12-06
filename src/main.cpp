@@ -40,7 +40,7 @@ int main(int argc, char ** argv)
 	glutReshapeFunc(handleResize);
 	
 	createScene();
-//	glutTimerFunc(16, update, 0);
+	glutTimerFunc(16, update, 0);
 
 	glutMainLoop();
 
@@ -52,6 +52,7 @@ void handleKeyPress(unsigned char k, int x, int y)
 	if (k==27) exit(0);
 	else if (k == 'd') { //WASD control
 		printf("Opa, right pressed!\n");
+		Engine::getInstance().getAnimationByName("prepareJump")->startAnimation();
 	}
 	else if (k=='l') { //change camera
 		Engine::getInstance().changeCameraTo("lampCam");		

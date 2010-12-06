@@ -622,7 +622,7 @@ Scene* pixarNotQuite(float w, float h) {
 	greyPlastic->setShininess(128);
 
 	Cube* floorCube = new Cube(200.0, 1.0f, 200.0f);
-	floorCube->setDiv(200);
+	floorCube->setDiv(100);
 
 	Entity* floor = new Entity("floor", floorCube, greyPlastic);
 	Transform* floorT = new Transform("floorT");
@@ -649,32 +649,30 @@ Scene* pixarNotQuite(float w, float h) {
 	theScene->addNode(l0);
 	theScene->addNode(floorT);
 	theScene->addNode(boxT);
-/*
-	Entity* ball = new Entity("ball", new Sphere(1.0f), redPlastic);
-	Transform* ballT = new Transform("ballT");
-	ballT->translate(0.0f, 0.0f, 0.0f);
-	ballT->addNode(ball);	
-*/	
+	
 	Transform* bulbT = (Transform*) theScene->findNode("bulbT", "Transform");
 	bulbT->addNode(auxCam);
-//	bulbT->addNode(ballT);
 
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	theScene->activateCamera("lampCam");	
 
-/*	Animation* prepareJump = new Animation;
+	/* Agora, as animacoes da cena */
+
+	Animation* prepareJump = new Animation;
 	Animation* jump = new Animation;	
-	
+	jump->setScene(theScene);
+	prepareJump->setScene(theScene);
+
 	float pos1[3] = {0.0, 0.0, 0.0};
 	float pos2[3] = {0.0, 30.0, 40.0};
+	float pos3[3] = {0.0, 50.0, 40.0};
 	
-	jump->addActionInFrame("baseT", pos1, 't', 0);
-	jump->addActionInFrame("baseT", pos2, 't', 1);
+	prepareJump->addActionInFrame("baseT", pos1, 't', 0);
+	prepareJump->addActionInFrame("baseT", pos2, 't', 1);
+	prepareJump->addActionInFrame("baseT", pos3, 't', 2);
 
-	Engine::getInstance().addAnimationToScene(jump, "jump");
-	Engine::getInstance().addAnimationToScene(prepareJump, "prepareJump");
+	theScene->addAnimation(prepareJump, "prepareJump");
+	theScene->addAnimation(jump, "jump");
 
-	setUpAnimations();
-*/
 	return theScene;
 }

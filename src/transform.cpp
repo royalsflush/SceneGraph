@@ -18,7 +18,7 @@ void Transform::load()
 	glPushMatrix();
 	glMultMatrixf(this->mat);
 
-/*
+
 	#ifdef _DBG
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++)
@@ -28,7 +28,6 @@ void Transform::load()
 
 		printf("\n");
 	#endif
-*/
 }
 
 void Transform::unload()
@@ -70,8 +69,6 @@ int Transform::setupCamera()
 		loadInv();
 
 		#ifdef _DBG
-			printf("Loaded matrix\n");
-	
 			for (int i=0; i<4; i++) {
 				for (int j=0; j<4; j++)
 					printf("%f ", inv[i][j]);

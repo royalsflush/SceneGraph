@@ -12,7 +12,7 @@ OUTPUT=out
 OBJ=$(SRC:.cpp=.o)
 
 CFLAGS+=-g
-DBGFLAGS = -D_FPVIEW -D_DBG
+DBGFLAGS = -D_FPVIEW #-D_DBG
 
 ifeq ($(shell uname),Darwin)
 	LIBS+= -framework OpenGL -framework GLUT
