@@ -15,7 +15,7 @@ class Action {
 	
 	//That's the vector associated with the action
 	//For rotation, I'm using the module as the angle
-	float vector[4]; 
+	float vector[3]; 
 
 	//Transform associated with this action
 	Transform* t;

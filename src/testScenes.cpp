@@ -602,8 +602,13 @@ Transform* buildChair(Texture* t, Material* m)
 
 void prepareJumpAnim(Scene* s) {
 	Animation* prepareJump = new Animation;
+	prepareJump->setFrameDuration(0.5);
 	prepareJump->setScene(s);
 
+	Animation* stand = new Animation;
+	stand->setFrameDuration(0.5);
+	stand->setScene(s);
+	
 	float h1pos1[3] = {0.0, 0.0, 0.0};
 	float h1pos2[3] = {-30.0, 0.0, 0.0};
 	float h2pos1[3] = {0.0, 0.0, 0.0};
@@ -622,38 +627,29 @@ void prepareJumpAnim(Scene* s) {
 	prepareJump->addActionInFrame("cupulaR", cpos1, 'r', 0);
 	prepareJump->addActionInFrame("cupulaR", cpos2, 'r', 1);
 
+	stand->addActionInFrame("haste1R", h1pos2, 'r', 0);
+	stand->addActionInFrame("haste1R", h1pos1, 'r', 1);
+	stand->addActionInFrame("haste2R", h2pos2, 'r', 0);
+	stand->addActionInFrame("haste2R", h2pos1, 'r', 1);
+	stand->addActionInFrame("haste3R", h3pos2, 'r', 0);
+	stand->addActionInFrame("haste3R", h3pos1, 'r', 1);
+	stand->addActionInFrame("cupulaR", cpos2, 'r', 0);
+	stand->addActionInFrame("cupulaR", cpos1, 'r', 1);
+
 	s->addAnimation(prepareJump, "prepareJump");	
-}
-
-void standAnim(Scene* s) {
-	Animation* stand = new Animation;
-	stand->setScene(s);
-
-	float h1pos1[3] = {-30.0, 0.0, 0.0};
-	float h1pos2[3] = {0.0, 0.0, 0.0};
-	float h2pos1[3] = {120.0, 0.0, 0.0};
-	float h2pos2[3] = {0.0, 0.0, 0.0};
-	float h3pos1[3] = {-120.0, 0.0, 0.0};
-	float h3pos2[3] = {0.0, 0.0, 0.0};
-	float cpos2[3] = {0.0, 0.0, 0.0};
-	float cpos1[3] = {30.0, 0.0, 0.0};
-	
-	stand->addActionInFrame("haste1R", h1pos1, 'r', 0);
-	stand->addActionInFrame("haste1R", h1pos2, 'r', 1);
-	stand->addActionInFrame("haste2R", h2pos1, 'r', 0);
-	stand->addActionInFrame("haste2R", h2pos2, 'r', 1);
-	stand->addActionInFrame("haste3R", h3pos1, 'r', 0);
-	stand->addActionInFrame("haste3R", h3pos2, 'r', 1);
-	stand->addActionInFrame("cupulaR", cpos1, 'r', 0);
-	stand->addActionInFrame("cupulaR", cpos2, 'r', 1);
-
 	s->addAnimation(stand, "stand");
 }
 
 void jumpAnim(Scene* s) {
 	Animation* jump = new Animation;
 	jump->setScene(s);
+	jump->setFrameDuration(0.5);
 	s->addAnimation(jump, "jump");
+
+	Animation* reverseJump = new Animation;
+	reverseJump->setScene(s);
+	reverseJump->setFrameDuration(0.5);
+	s->addAnimation(reverseJump, "reverseJump");
 
 	float h1pos1[3] = {-30.0, 0.0, 0.0};
 	float h2pos1[3] = {120.0, 0.0, 0.0};
@@ -716,6 +712,39 @@ void jumpAnim(Scene* s) {
 	jump->addActionInFrame("haste3R", h3pos1, 'r', 4);
 	jump->addActionInFrame("cupulaR", cpos1, 'r', 4);
 	
+	//Reversing the jump
+
+	reverseJump->addActionInFrame("baseT", btpos5, 't', 0);	
+	reverseJump->addActionInFrame("haste1R", h1pos1, 'r', 0);	
+	reverseJump->addActionInFrame("haste2R", h2pos1, 'r', 0);	
+	reverseJump->addActionInFrame("haste3R", h3pos1, 'r', 0);	
+	reverseJump->addActionInFrame("cupulaR", cpos1, 'r', 0);	
+		
+	reverseJump->addActionInFrame("baseR", brpos4, 'r', 1);
+	reverseJump->addActionInFrame("baseT", btpos4, 't', 1);
+	reverseJump->addActionInFrame("haste1R", h1pos4, 'r', 1);
+	reverseJump->addActionInFrame("haste2R", h2pos4, 'r', 1);
+	reverseJump->addActionInFrame("haste3R", h3pos4, 'r', 1);
+	reverseJump->addActionInFrame("cupulaR", cpos4, 'r', 1);
+	
+	reverseJump->addActionInFrame("baseR", brpos3, 'r', 2);
+	reverseJump->addActionInFrame("baseT", btpos3, 't', 2);
+	reverseJump->addActionInFrame("haste1R", h1pos3, 'r', 2);
+	reverseJump->addActionInFrame("haste2R", h2pos3, 'r', 2);
+	reverseJump->addActionInFrame("haste3R", h3pos3, 'r', 2);
+	reverseJump->addActionInFrame("cupulaR", cpos3, 'r', 2);
+
+	reverseJump->addActionInFrame("baseR", brpos2, 'r', 3);
+	reverseJump->addActionInFrame("baseT", btpos2, 't', 3);
+	reverseJump->addActionInFrame("haste1R", h1pos2, 'r', 3);
+	reverseJump->addActionInFrame("haste2R", h2pos2, 'r', 3);
+	reverseJump->addActionInFrame("haste3R", h3pos2, 'r', 3);
+	reverseJump->addActionInFrame("cupulaR", cpos2, 'r', 3);
+	
+	reverseJump->addActionInFrame("haste1R", h1pos1, 'r', 4);
+	reverseJump->addActionInFrame("haste2R", h2pos1, 'r', 4);
+	reverseJump->addActionInFrame("haste3R", h3pos1, 'r', 4);
+	reverseJump->addActionInFrame("cupulaR", cpos1, 'r', 4);
 }
 
 Scene* pixarNotQuite(float w, float h) {
@@ -730,7 +759,7 @@ Scene* pixarNotQuite(float w, float h) {
 	theCamera->setZCenter(60.0f);
 
 	Camera* auxCam = new Camera("lampCam");
-	auxCam->setZPlanes(1.0f, 100.0f);
+	auxCam->setZPlanes(1.0f, 500.0f);
 	auxCam->setEye(0.0f, 0.0f, 5.0f);
 	auxCam->setUp(0.0f, 1.0f, 0.0f);
 	auxCam->setCenter(0.0f, 0.0f, 100.0f);
@@ -760,7 +789,7 @@ Scene* pixarNotQuite(float w, float h) {
 	
 	Entity* box = new Entity("box", new Cube(3.0f, 30.0f, 3.0f), redPlastic);
 	Transform* boxT = new Transform("boxT");
-	boxT->translate(14.0f, 10.0f, -40.0f);
+	boxT->translate(24.0f, 10.0f, -40.0f);
 	boxT->addNode(box);	
 
 	Light* l0 = new Light("mainL", 0.0f, 0.0f, 1.0f, 0.0f);
@@ -783,7 +812,6 @@ Scene* pixarNotQuite(float w, float h) {
 
 	/* Agora, as animacoes da cena */
 	prepareJumpAnim(theScene);
-	standAnim(theScene);
 	jumpAnim(theScene);
 	
 	return theScene;

@@ -70,6 +70,11 @@ void handleKeyPress(unsigned char k, int x, int y)
 		Engine::getInstance().getAnimationByName("jump")->startAnimation();
 		lampState='j';		
 	}
+	else if (k == 'a') {
+		if (lampState!='j') return;
+		Engine::getInstance().getAnimationByName("reverseJump")->startAnimation();
+		lampState='r';	
+	}
 	else if (k=='l') { //change camera
 		Engine::getInstance().changeCameraTo("lampCam");		
 	}

@@ -18,6 +18,10 @@
 #include "scene.h"
 using namespace std;
 
+#define PI 3.141592
+#define TORAD(theta) (theta*PI)/180.0 
+#define TODEG(theta) 180.0*theta/PI
+
 Animation::Animation() : animationScene(NULL), frameDuration(1.0), frames(0), active(false) { }
 
 Animation::~Animation() {
@@ -45,7 +49,6 @@ void Animation::addActionInFrame(const char* transformName, float* vec, char typ
 	act->vector[0] = vec[0];
 	act->vector[1] = vec[1];
 	act->vector[2] = vec[2];
-	act->vector[3] = 1.0f;
 
 	act->type = type;
 	act->t = t;
@@ -108,7 +111,7 @@ void Animation::changeTransform(Action* act) {
 		
 		if (act->type == 't') {
 			for (int j=0; j<3; j++)
-				interpol[j]=(1-t)*act->vector[j]+t*nextAction->vector[j];
+				interpol[j]=(1-t*t)*act->vector[j]+t*t*nextAction->vector[j];
 			
 			act->t->identity();
 			act->t->translate(interpol[0], interpol[1], interpol[2]);
@@ -117,38 +120,49 @@ void Animation::changeTransform(Action* act) {
 		}
 		else if (act->type == 'r') {	
 			float alpha = 0;
-			float nv1=0, nv2=0;
+			float q0[4];
+			float q1[4];
+			float angle0=0, angle1=0;
 
 			for (int j=0; j<4; j++) {
-				nv1+=act->vector[j]*act->vector[j];
-				nv2+=nextAction->vector[j]*nextAction->vector[j];
+				angle0+=act->vector[j]*act->vector[j];
+				angle1+=nextAction->vector[j]*nextAction->vector[j];
 			}	
 
-			nv1=sqrt(nv1); nv2=sqrt(nv2);
+			angle0=sqrt(angle0); angle1=sqrt(angle1);
+	
+			q0[0] = cos(TORAD(angle0/2.0));
+			q1[0] = cos(TORAD(angle1/2.0));
 
-
+			for (int j=1; j<4; j++) {
+				q0[j]=(act->vector[j-1])*sin(TORAD(angle0/2.0));
+				q1[j]=(nextAction->vector[j-1])*sin(TORAD(angle1/2.0));
+			
+				if (angle0) q0[j]/=angle0;
+				if (angle1) q1[j]/=angle1;
+			}	
+			
 			//dot product
 			for (int j=0; j<4; j++)
-				alpha+=act->vector[j]*nextAction->vector[j];
-			
-			alpha /= (nv1*nv2);
+				alpha+=q0[j]*q1[j];
+		
 			alpha = acos(alpha);
-			
+	
 			for (int j=0; j<4; j++)
-				interpol[j]= (sin((1-t)*alpha)*act->vector[j]+sin(t*alpha)*nextAction->vector[j])/sin(alpha);
+				interpol[j]= (sin((1-t)*alpha)*q0[j]+sin(t*alpha)*q1[j])/sin(alpha);
 
-			float angle = 0;
+			float angle = acos(interpol[0]);
+			angle*=2;
 
-			for (int j=0; j<4; j++)
-				angle+=interpol[j]*interpol[j];
+			for (int j=1; j<4; j++) {
+				if (angle) interpol[j] = interpol[j]/sin(angle/2.0);
+				else interpol[j]=0.0;
+			}
 
-			angle = sqrt(angle);
+			angle = TODEG(angle);
 
 			act->t->identity();
-			act->t->rotate(angle, interpol[0]/angle, interpol[1]/angle, interpol[2]/angle);
-		
-			if (strcmp(act->t->getId().c_str(), "haste1R")==0)
-				printf("interpol: {%f, %f, %f}\n", interpol[0], interpol[1], interpol[2]);
+			act->t->rotate(angle, interpol[1], interpol[2], interpol[3]);
 		}
 
 		return;
