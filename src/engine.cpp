@@ -72,22 +72,23 @@ void Engine::renderCurrentScene()
 	glutSwapBuffers();
 }
 
-void Engine::addAnimation(Animation* a, const char* name)
+void Engine::addAnimationToScene(Animation* a, const char* name)
 {
-	if (getAnimation.find(name) != getAnimation.end())
-		return;
-
-	getAnimation[name]=a;
+	this->curr->addAnimation(a, name);
 }
 
 Animation* Engine::getAnimationByName(const char* name)
 {
-	return getAnimation[name];
+	return this->curr->getAnimationByName(name);
 }
 
-void Engine::changeScene() {
-	map<string, Animation*>::iterator it = getAnimation.begin();
+void Engine::changeScene() 
+{
+	this->curr->runAnimations();	
+}
 
-	for (it; it!=getAnimation.end(); ++it)
-		if (it->second->isActive()) it->second->animate(0);
+void Engine::changeCameraTo(const char* name)
+{
+	this->curr->activateCamera(name);
+	this->renderCurrentScene();
 }

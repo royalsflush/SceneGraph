@@ -20,10 +20,6 @@ Mesh::Mesh(const char* filename)
 		exit(1);
 	}
 
-	#ifdef _DBG
-		printf("Loading mesh from file\n");
-	#endif
-
 	fscanf(fp, "%d %d", &this->nVert, &this->nInd);
 
 	this->vert = new float[3*(this->nVert)];
@@ -53,10 +49,6 @@ Mesh::Mesh(const char* filename)
 
 void Mesh::draw()
 {
-	#ifdef _DBG
-		printf("Drawing mesh\n");
-	#endif
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 

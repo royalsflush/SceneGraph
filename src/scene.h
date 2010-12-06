@@ -6,12 +6,17 @@
 using namespace std;
 
 #include "group.h"
+
+//Environ is included instead of
+// just forward declared because
+// it has the enum to fogModes
 #include "environ.h"
 
 class Camera;
+class Animation;
 
 class Scene : public Group {
-	map<string, Camera*> cameraOpts;
+	map<string, Animation*> animations;
 	Camera* currCam;
 	Environ* env;
 
@@ -21,10 +26,19 @@ class Scene : public Group {
 	int setupCamera();
 	int setupLights();
 	void render();	
+
+	/* Camera-related functions */
 	
 	void changeAspect(float nasp);
-	void addCamera(Camera* c, const char* name);
 	void activateCamera(const char* name); 
+
+	/* Animation-related functions */
+
+	void addAnimation(Animation* a, const char* name);
+	Animation* getAnimationByName(const char* name);
+	void runAnimations();
+
+	/* Environ wrappers */
 	
 	void setClearColor(float r, float g, float b, float a);
 	void setGlobalLight(float r, float g, float b, float a);

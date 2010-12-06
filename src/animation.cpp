@@ -14,9 +14,10 @@
 
 #include "animation.h"
 #include "transform.h"
+#include "scene.h"
 using namespace std;
 
-Animation::Animation() : frameDuration(1.0), frames(0), active(false) { }
+Animation::Animation() : animationScene(NULL), frameDuration(1.0), frames(0), active(false) { }
 
 Animation::~Animation() {
 	for (int i=0; i<actionsPerFrame.size(); i++)
@@ -28,21 +29,15 @@ void Animation::setFrameDuration(float dur) {
 	this->frameDuration = dur;
 }
 
-void Animation::addTransformForKey(Transform* t, const char* key) {
-	if (getTransform.find(key) != getTransform.end())
-		return;
-
-	#ifdef _ANIM
-		printf("Adding transform %s\n", key);
-	#endif
-
-	getTransform[key] = t;
-}
-
 void Animation::addActionInFrame(const char* transformName, float* vec, char type, int frameNum) {
 	#ifdef _ANIM
 		printf("Adding action to %s, frame %d\n", transformName, frameNum);
 	#endif		
+
+	if (!this->animationScene) //you should put the scene first
+		return;
+
+	Transform* t = (Transform*) this->animationScene->findNode(transformName, "Transform");
 
 	Action* act = new Action;
 
@@ -51,7 +46,7 @@ void Animation::addActionInFrame(const char* transformName, float* vec, char typ
 	act->vector[2] = vec[2];
 
 	act->type = type;
-	act->t = getTransform[transformName];
+	act->t = t;
 
 	if (this->frames < frameNum+1) {
 		this->actionsPerFrame.resize(frameNum+1);
@@ -127,4 +122,9 @@ void Animation::changeTransform(Action* act) {
 bool Animation::isActive() 
 {
 	return this->active;
+}
+
+void Animation::setScene(Scene* s)
+{
+	this->animationScene = s;
 }

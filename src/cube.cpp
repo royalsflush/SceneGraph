@@ -72,10 +72,6 @@ void Cube::buildCube()
 
 void Cube::draw()
 {
-	#ifdef _DBG
-		printf("Drawing Cube\n");
-	#endif
-
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glScalef(this->dimX, this->dimY, this->dimZ);

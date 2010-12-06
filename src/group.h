@@ -18,7 +18,8 @@ class Group : public Node {
 	int setupLights();
 	int setupCamera();	
 
-	Node* findNode(const char* name, const char* type);
+	virtual void printChildren();
+	virtual Node* findNode(const char* name, const char* type);
 	void addNode(Node* newNode);
 };
 

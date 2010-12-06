@@ -11,6 +11,7 @@
 #include "scene.h"
 #include "camera.h"
 #include "environ.h"
+#include "animation.h"
 
 Scene::Scene(const char* name) : Group(name, "Scene"), currCam(NULL)
 {
@@ -19,13 +20,17 @@ Scene::Scene(const char* name) : Group(name, "Scene"), currCam(NULL)
 
 void Scene::render() 
 {
-	Group::setupCamera();
+	Scene::setupCamera();
 	Group::setupLights();
 	Group::render();
 }
 
 int Scene::setupCamera()
 {
+	while (glGetError() != GL_STACK_UNDERFLOW) { 
+		glPopMatrix();
+	}
+
 	return Group::setupCamera();
 }
 
@@ -42,29 +47,45 @@ void Scene::changeAspect(float nasp)
 	this->currCam->setAspectRatio(nasp);
 }
 
-void Scene::addCamera(Camera* c, const char* name)
+void Scene::activateCamera(const char* name)
 {
-	if (cameraOpts.find(name) != cameraOpts.end())
+	setbuf(stdout,NULL);
+	Camera* newCam = (Camera*) this->findNode(name, "Camera");
+
+	if (!newCam) //no camera with this name!
 		return;
 
-	cameraOpts[name]=c;
+	printf("New cam is: %p and curr cam is: %p\n", newCam, this->currCam);
+	
+	if (this->currCam) 
+		this->currCam->activate(false);
 
-	if (!this->currCam) this->currCam =c;
+	this->currCam = newCam;
 	this->currCam->activate(true);
 }
 
-void Scene::activateCamera(const char* name)
+void Scene::addAnimation(Animation* a, const char* name)
 {
-	if (!this->currCam) //there's no camera in the opts
+	if (animations.find(name) != animations.end())
 		return;
 
-	//there's no camera with this name
-	if (cameraOpts.find(name) == cameraOpts.end())
-		return;
+	animations[name]=a;	
+	a->setScene(this);
+}
 
-	this->currCam->activate(false);
-	this->currCam = cameraOpts[name];
-	this->currCam->activate(true);
+Animation* Scene::getAnimationByName(const char* name)
+{
+	return this->animations[name];
+}
+
+void Scene::runAnimations()
+{
+	map<string, Animation*>::iterator it = animations.begin();
+
+	for (it; it!=animations.end(); ++it) {
+		if (it->second->isActive())
+			it->second->animate(0);
+	}
 }
 
 /* This functions are just wrappers to the environ class */

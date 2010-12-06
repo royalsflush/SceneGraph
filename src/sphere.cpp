@@ -13,10 +13,6 @@ Sphere::Sphere(float r) : radius(r) { }
 
 void Sphere::draw()
 {
-	#ifdef _DBG
-		printf("Drawing sphere\n");
-	#endif
-
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glScalef(this->radius, this->radius, this->radius);

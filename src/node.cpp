@@ -12,6 +12,10 @@ Node::Node(const char* nId, const char* nType)
 
 Node* Node::findNode(const char* name, const char* nType)
 {
+	#ifdef _DBG
+		printf("Reached %s - %p\n", id.c_str(), this);
+	#endif
+	
 	if (!this->id.compare(name) && !this->type.compare(nType))
 		return this;
 

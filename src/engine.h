@@ -5,13 +5,12 @@
 #include <string>
 using namespace std;
 
-class Animation;
 class Scene;
+class Animation;
 
 class Engine {
 	static Engine* theEngine;
 	Scene* curr;
-	map<string, Animation*> getAnimation;
 
 	Engine();
 
@@ -26,8 +25,10 @@ class Engine {
 	void handleResize(int w, int h);
 	void handleKeyPress(unsigned char k, int x, int y);
 
-	void addAnimation(Animation* a, const char* name);
+	void addAnimationToScene(Animation* a, const char* name);
 	Animation* getAnimationByName(const char* name);
+
+	void changeCameraTo(const char* name);
 };
 
 #endif /* ENGINE_H */

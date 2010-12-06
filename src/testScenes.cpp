@@ -71,7 +71,7 @@ Scene* tessCube(float w, float h)
 	Scene* theScene = new Scene("mainScene");
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
+	theScene->activateCamera("mainC");
 	theScene->addNode(l0);
 	theScene->addNode(l1);
 	theScene->addNode(l2);
@@ -123,7 +123,7 @@ Scene* demoScene(float w, float h)
 
 	Scene* theScene = new Scene("mainScene");
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
+	theScene->activateCamera("mainC");
 	theScene->addNode(l0);
 	theScene->addNode(transl);
 
@@ -180,7 +180,7 @@ Scene* lightsTestScene(float w, float h)
 	Scene* theScene = new Scene("mainScene");
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
+	theScene->activateCamera("mainC");
 	theScene->addNode(l0);
 	theScene->addNode(l1);
 	theScene->addNode(l2);
@@ -241,7 +241,7 @@ Scene* meshTest(float w, float h)
 	Scene* theScene = new Scene("mainScene");
 	theScene->setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
+	theScene->activateCamera("mainC");
 	theScene->addNode(t1);
 	theScene->addNode(t2);
 	theScene->addNode(t3);
@@ -351,7 +351,7 @@ Scene* tableScene(float w, float h)
 	Scene* theScene = new Scene("mainScene");
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
+	theScene->activateCamera("mainC");
 	
 	theScene->addNode(roomT);
 	//theScene->addNode(ball);
@@ -374,14 +374,11 @@ Scene* tableScene(float w, float h)
 
 Transform* buildLamp()
 {
-	Animation* prepareJump = new Animation;
-	Animation* jump = new Animation;	
-
 	Transform* luxPos = new Transform("luxPos");
 
-	Material* redPlastic = new Material(0.6f, 0.0f, 0.0f);
+	Material* redPlastic = new Material(0.5f, 0.0f, 0.0f);
 	redPlastic->setSpecular(0.2f, 0.2f, 0.2f);
-	redPlastic->setShininess(10);	
+	redPlastic->setShininess(1);	
 	
 	Material* redLamp = new Material(0.2f, 0.2f, 0.2f);
 	redLamp->setSpecular(0.2f, 0.2f, 0.2f);
@@ -430,19 +427,13 @@ Transform* buildLamp()
 	cupulaT->addNode(lampadaT);
 
 	Light* bulb = new Light("bulbL", 0.0f, 0.0f, 0.0f, 1.0f);
-	bulb->setAmbient(0.2f, 0.0f, 0.0f, 1.0f);
-	bulb->setDiffuse(0.2f, 0.0f, 0.0f, 1.0f);
+	bulb->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	bulb->setDiffuse(0.2f, 0.2f, 0.2f, 1.0f);
 	bulb->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
-	bulb->setSpotDir(0.0f, -1.0f, 1.5f);
+	bulb->setSpotDir(0.0f, 0.0f, 1.0f);
 	bulb->setSpotCutoff(60);
 	bulb->setSpotExp(60);
 	lampadaT->addNode(bulb);
-
-	// Setting the animations
-	jump->addTransformForKey(baseT, "baseT");
-
-	Engine::getInstance().addAnimation(jump, "jump");
-	Engine::getInstance().addAnimation(prepareJump, "prepareJump");
 
 	return luxPos;
 }
@@ -600,12 +591,6 @@ Transform* buildChair(Texture* t, Material* m)
 // Here starts the code to lamp animation
 
 void setUpAnimations() {
-	Animation* jump = Engine::getInstance().getAnimationByName("jump");
-	float pos1[3] = {0.0, 0.0, 0.0};
-	float pos2[3] = {0.0, 30.0, 40.0};
-	
-	jump->addActionInFrame("baseT", pos1, 't', 0);
-	jump->addActionInFrame("baseT", pos2, 't', 1);
 }
 
 Scene* pixarNotQuite(float w, float h) {
@@ -617,38 +602,79 @@ Scene* pixarNotQuite(float w, float h) {
 	theCamera->setAspectRatio(w/h);
 	theCamera->setAngle(50.0f);
 	theCamera->setManipulator(new VManipulator);
-	theCamera->setZCenter(40.0f);
+	theCamera->setZCenter(60.0f);
 
 	Camera* auxCam = new Camera("lampCam");
 	auxCam->setZPlanes(1.0f, 100.0f);
-	auxCam->setEye(0.0f, 0.0f, 20.0f);
+	auxCam->setEye(0.0f, 0.0f, 5.0f);
 	auxCam->setUp(0.0f, 1.0f, 0.0f);
-	auxCam->setCenter(0.0f, 0.0f, 0.0f);
+	auxCam->setCenter(0.0f, 0.0f, 100.0f);
 	auxCam->setAspectRatio(w/h);
 	auxCam->setAngle(50.0f);
-	
+
 	Transform* lamp = buildLamp();
 	lamp->scale(0.2f, 0.2f, 0.2f);
 	lamp->rotate(90, 0.0f, 1.0f, 0.0f);
 	lamp->translate(-3.0f, -3.0f, -40.0f);
 
-	Material* greenPlastic = new Material(0.0f, 0.5f, 0.0f);
-	greenPlastic->setSpecular(0.5f, 0.5f, 0.5f);
-	greenPlastic->setShininess(128);
+	Material* greyPlastic = new Material(0.3f, 0.3f, 0.3f);
+	greyPlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	greyPlastic->setShininess(128);
+
+	Cube* floorCube = new Cube(200.0, 1.0f, 200.0f);
+	floorCube->setDiv(200);
+
+	Entity* floor = new Entity("floor", floorCube, greyPlastic);
+	Transform* floorT = new Transform("floorT");
+	floorT->translate(-3.0f, -3.5f, -40.0f);
+	floorT->addNode(floor);
+
+	Material* redPlastic = new Material(0.5f, 0.f, 0.0f);
+	redPlastic->setSpecular(0.5f, 0.5f, 0.5f);
+	redPlastic->setShininess(128);
 	
+	Entity* box = new Entity("box", new Cube(3.0f, 30.0f, 3.0f), redPlastic);
+	Transform* boxT = new Transform("boxT");
+	boxT->translate(14.0f, 10.0f, -40.0f);
+	boxT->addNode(box);	
+
 	Light* l0 = new Light("mainL", 0.0f, 0.0f, 1.0f, 0.0f);
 	l0->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
 	l0->setDiffuse(0.2f, 0.2f, 0.2f, 1.0f);
 	l0->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
 
-	Scene* theScene = new Scene("mainScene");
+	Scene* theScene = new Scene("mainScene");	
 	theScene->addNode(theCamera);
-	theScene->addCamera(theCamera, "main");
-	theScene->addNode(l0);
 	theScene->addNode(lamp);
+	theScene->addNode(l0);
+	theScene->addNode(floorT);
+	theScene->addNode(boxT);
+/*
+	Entity* ball = new Entity("ball", new Sphere(1.0f), redPlastic);
+	Transform* ballT = new Transform("ballT");
+	ballT->translate(0.0f, 0.0f, 0.0f);
+	ballT->addNode(ball);	
+*/	
+	Transform* bulbT = (Transform*) theScene->findNode("bulbT", "Transform");
+	bulbT->addNode(auxCam);
+//	bulbT->addNode(ballT);
+
 	theScene->setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	theScene->activateCamera("lampCam");	
+
+/*	Animation* prepareJump = new Animation;
+	Animation* jump = new Animation;	
+	
+	float pos1[3] = {0.0, 0.0, 0.0};
+	float pos2[3] = {0.0, 30.0, 40.0};
+	
+	jump->addActionInFrame("baseT", pos1, 't', 0);
+	jump->addActionInFrame("baseT", pos2, 't', 1);
+
+	Engine::getInstance().addAnimationToScene(jump, "jump");
+	Engine::getInstance().addAnimationToScene(prepareJump, "prepareJump");
 
 	setUpAnimations();
-
+*/
 	return theScene;
 }

@@ -65,10 +65,11 @@ void Camera::setZCenter(float zcent)
 int Camera::setupCamera() 
 {
 	#ifdef _DBG
-		printf("Camera->setupCamera()\n");
+		printf("Camera->setupCamera(): %s\n", this->getId().c_str());
 	#endif
 
-	if (!this->active) return 0;
+	if (!this->active) 
+		return 0;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -111,5 +112,6 @@ bool Camera::isActive()
 
 void Camera::activate(bool yes)
 {
+	printf("%sctivated camera %s\n", yes? "A":"Dea", this->getId().c_str());
 	this->active = yes;
 }

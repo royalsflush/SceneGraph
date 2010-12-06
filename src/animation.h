@@ -6,10 +6,9 @@
 #include <string>
 using namespace std;
 
-// I'm going to reference the
-// Transform class in the map
 class Transform;
 class Animation;
+class Scene;
 
 class Action {
 	char type; //r for rotation, s for scaling, t for translation
@@ -32,9 +31,6 @@ class Animation {
 	//That's actually the duration for space between frames
 	float frameDuration;
 
-	//A little key-value philosophy here
-	map<string, Transform*> getTransform;
-
 	//Counter for the frames
 	int frames;
 
@@ -43,6 +39,9 @@ class Animation {
 
 	//The actions executed in each frame
 	vector< vector<Action*> > actionsPerFrame;
+
+	//
+	Scene* animationScene;
 
 	/* This part controls the animation that's running */
 	
@@ -63,7 +62,7 @@ class Animation {
 	bool isActive();
 
 	void setFrameDuration(float dur);
-	void addTransformForKey(Transform* t, const char* key);
+	void setScene(Scene* s);
 
 	//FrameNum starts with 0
 	void addActionInFrame(const char* transformName, float* vec, char type, int frameNum);
