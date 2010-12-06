@@ -61,13 +61,13 @@ void Environ::setFogLim(float start, float end)
 void Environ::setFogMode(fogModes f)
 {
 	switch (f) {
-		case linear:
+		case fog_linear:
 			glFogi(GL_FOG_MODE, GL_LINEAR);
 			break;
-		case exp:
+		case fog_exp:
 			glFogi(GL_FOG_MODE, GL_EXP);
 			break;
-		case exp2:
+		case fog_exp2:
 			glFogi(GL_FOG_MODE, GL_EXP2);
 			break;
 	}

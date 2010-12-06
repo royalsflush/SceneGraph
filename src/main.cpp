@@ -26,6 +26,11 @@ void render();
 void createScene();
 void update(int value);
 
+//n for not ready
+//r for ready
+//j for jumped
+static char lampState = 'n';
+
 int main(int argc, char ** argv)
 {
 	glutInit(&argc, argv);
@@ -50,9 +55,20 @@ int main(int argc, char ** argv)
 void handleKeyPress(unsigned char k, int x, int y)
 {
 	if (k==27) exit(0);
-	else if (k == 'd') { //WASD control
-		printf("Opa, right pressed!\n");
+	else if (k == 's') { //WASD control	
+		if (lampState!='n') return;
 		Engine::getInstance().getAnimationByName("prepareJump")->startAnimation();
+		lampState='r';
+	}
+	else if (k == 'w') {
+		if (lampState!='r') return;
+		Engine::getInstance().getAnimationByName("stand")->startAnimation();
+		lampState='n';	
+	}
+	else if (k == 'd') {
+		if (lampState!='r') return;
+		Engine::getInstance().getAnimationByName("jump")->startAnimation();
+		lampState='j';		
 	}
 	else if (k=='l') { //change camera
 		Engine::getInstance().changeCameraTo("lampCam");		

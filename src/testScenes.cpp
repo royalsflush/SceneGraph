@@ -251,7 +251,7 @@ Scene* meshTest(float w, float h)
 	theScene->localViewer(true);
 	theScene->enableFog(true);
 	theScene->setFogColor(0.8f, 0.8f, 0.8f, 1.0f);
-	theScene->setFogMode(linear);
+	theScene->setFogMode(fog_linear);
 	theScene->setFogLim(4.0, 10.0);
 
 	return theScene;
@@ -365,7 +365,7 @@ Scene* tableScene(float w, float h)
 
 	theScene->enableFog(true);
 	theScene->setFogColor(0.2f, 0.2f, 0.2f, 1.0f);
-	theScene->setFogMode(linear);
+	theScene->setFogMode(fog_linear);
 	theScene->setFogLim(5.0, 40.0);
 
 
@@ -387,44 +387,54 @@ Transform* buildLamp()
 	Entity* baseA = new Entity("baseA", new Mesh("luxor/base_a.msh"), redPlastic);
 	Entity* baseB = new Entity("baseB", new Mesh("luxor/base_b.msh"), redPlastic);
 	Transform* baseT = new Transform("baseT");
+	Transform* baseR = new Transform("baseR");
 	baseT->addNode(baseA);
 	baseT->addNode(baseB);
-	luxPos->addNode(baseT);
+	baseR->addNode(baseT);
+	luxPos->addNode(baseR);
 
 	Entity* haste1 = new Entity("haste1", new Mesh("luxor/haste1.msh"), redPlastic);
 	Transform* haste1T = new Transform("haste1T");
 	haste1T->translate(0.0f, 4.0f, 0.0f);
+	Transform* haste1R = new Transform("haste1R");
 	haste1T->addNode(haste1);
-	baseT->addNode(haste1T);
+	haste1R->addNode(haste1T);
+	baseT->addNode(haste1R);
 	
 	Entity* haste2 = new Entity("haste2", new Mesh("luxor/haste2.msh"), redPlastic);
 	Transform* haste2T = new Transform("haste2T");
 	haste2T->translate(0.0f, 17.15f, 0.0f);
-	haste2T->addNode(haste2);
+	Transform* haste2R = new Transform("haste2R");
+	haste2R->addNode(haste2);
+	haste2T->addNode(haste2R);
 	haste1T->addNode(haste2T);
 	
 	Entity* haste3A = new Entity("haste3A", new Mesh("luxor/haste3_a.msh"), redPlastic);
 	Transform* haste3T = new Transform("haste3T");
+	Transform* haste3R = new Transform("haste3R");
 	haste3T->translate(0.0f, 16.78f, 0.0f);
-	haste3T->addNode(haste3A);
+	haste3R->addNode(haste3A);
 	
 	Entity* haste3B = new Entity("haste3B", new Mesh("luxor/haste3_b.msh"), redPlastic);
-	haste3T->addNode(haste3B);
-	haste2T->addNode(haste3T);
+	haste3R->addNode(haste3B);
+	haste3T->addNode(haste3R);
+	haste2R->addNode(haste3T);
 	
 	Entity* cupulaA = new Entity("cupula1", new Mesh("luxor/cupula_a.msh"), redPlastic);
 	Entity* cupulaB = new Entity("cupula2", new Mesh("luxor/cupula_b.msh"), redPlastic);
 	Transform* cupulaT = new Transform("cupulaT");
+	Transform* cupulaR = new Transform("cupulaR");
 	cupulaT->translate(0.0f, 18.12f, 0.0f);
-	cupulaT->addNode(cupulaA);
-	cupulaT->addNode(cupulaB);
-	haste3T->addNode(cupulaT);
+	cupulaR->addNode(cupulaA);
+	cupulaR->addNode(cupulaB);
+	cupulaT->addNode(cupulaR);
+	haste3R->addNode(cupulaT);
 	
 	Entity* lampada = new Entity("bulb", new Mesh("luxor/lampada.msh"), redLamp);
 	Transform* lampadaT = new Transform("bulbT");
 	lampadaT->translate(0.0f, 8.4f, 9.0f);
 	lampadaT->addNode(lampada);
-	cupulaT->addNode(lampadaT);
+	cupulaR->addNode(lampadaT);
 
 	Light* bulb = new Light("bulbL", 0.0f, 0.0f, 0.0f, 1.0f);
 	bulb->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
@@ -590,7 +600,122 @@ Transform* buildChair(Texture* t, Material* m)
 
 // Here starts the code to lamp animation
 
-void setUpAnimations() {
+void prepareJumpAnim(Scene* s) {
+	Animation* prepareJump = new Animation;
+	prepareJump->setScene(s);
+
+	float h1pos1[3] = {0.0, 0.0, 0.0};
+	float h1pos2[3] = {-30.0, 0.0, 0.0};
+	float h2pos1[3] = {0.0, 0.0, 0.0};
+	float h2pos2[3] = {120.0, 0.0, 0.0};
+	float h3pos1[3] = {0.0, 0.0, 0.0};
+	float h3pos2[3] = {-120.0, 0.0, 0.0};
+	float cpos1[3] = {0.0, 0.0, 0.0};
+	float cpos2[3] = {30.0, 0.0, 0.0};
+	
+	prepareJump->addActionInFrame("haste1R", h1pos1, 'r', 0);
+	prepareJump->addActionInFrame("haste1R", h1pos2, 'r', 1);
+	prepareJump->addActionInFrame("haste2R", h2pos1, 'r', 0);
+	prepareJump->addActionInFrame("haste2R", h2pos2, 'r', 1);
+	prepareJump->addActionInFrame("haste3R", h3pos1, 'r', 0);
+	prepareJump->addActionInFrame("haste3R", h3pos2, 'r', 1);
+	prepareJump->addActionInFrame("cupulaR", cpos1, 'r', 0);
+	prepareJump->addActionInFrame("cupulaR", cpos2, 'r', 1);
+
+	s->addAnimation(prepareJump, "prepareJump");	
+}
+
+void standAnim(Scene* s) {
+	Animation* stand = new Animation;
+	stand->setScene(s);
+
+	float h1pos1[3] = {-30.0, 0.0, 0.0};
+	float h1pos2[3] = {0.0, 0.0, 0.0};
+	float h2pos1[3] = {120.0, 0.0, 0.0};
+	float h2pos2[3] = {0.0, 0.0, 0.0};
+	float h3pos1[3] = {-120.0, 0.0, 0.0};
+	float h3pos2[3] = {0.0, 0.0, 0.0};
+	float cpos2[3] = {0.0, 0.0, 0.0};
+	float cpos1[3] = {30.0, 0.0, 0.0};
+	
+	stand->addActionInFrame("haste1R", h1pos1, 'r', 0);
+	stand->addActionInFrame("haste1R", h1pos2, 'r', 1);
+	stand->addActionInFrame("haste2R", h2pos1, 'r', 0);
+	stand->addActionInFrame("haste2R", h2pos2, 'r', 1);
+	stand->addActionInFrame("haste3R", h3pos1, 'r', 0);
+	stand->addActionInFrame("haste3R", h3pos2, 'r', 1);
+	stand->addActionInFrame("cupulaR", cpos1, 'r', 0);
+	stand->addActionInFrame("cupulaR", cpos2, 'r', 1);
+
+	s->addAnimation(stand, "stand");
+}
+
+void jumpAnim(Scene* s) {
+	Animation* jump = new Animation;
+	jump->setScene(s);
+	s->addAnimation(jump, "jump");
+
+	float h1pos1[3] = {-30.0, 0.0, 0.0};
+	float h2pos1[3] = {120.0, 0.0, 0.0};
+	float h3pos1[3] = {-120.0, 0.0, 0.0};
+	float cpos1[3] = {30.0, 0.0, 0.0};
+
+	jump->addActionInFrame("haste1R", h1pos1, 'r', 0);
+	jump->addActionInFrame("haste2R", h2pos1, 'r', 0);
+	jump->addActionInFrame("haste3R", h3pos1, 'r', 0);
+	jump->addActionInFrame("cupulaR", cpos1, 'r', 0);
+
+	float btpos2[3] = {0.0, 0.0, 0.0};
+	float brpos2[3] = {0.0, 0.0, 0.0};
+	float h1pos2[3] = {-40.0, 0.0, 0.0};
+	float h2pos2[3] = {150.0, 0.0, 0.0};
+	float h3pos2[3] = {-145.0, 0.0, 0.0};
+	float cpos2[3] = {60.0, 0.0, 0.0};
+	
+	jump->addActionInFrame("baseR", brpos2, 'r', 1);
+	jump->addActionInFrame("baseT", btpos2, 't', 1);
+	jump->addActionInFrame("haste1R", h1pos2, 'r', 1);
+	jump->addActionInFrame("haste2R", h2pos2, 'r', 1);
+	jump->addActionInFrame("haste3R", h3pos2, 'r', 1);
+	jump->addActionInFrame("cupulaR", cpos2, 'r', 1);
+
+	float btpos3[3] = {0.0, 30.0, 50.0};
+	float brpos3[3] = {-30.0, 0.0, 0.0};
+	float h1pos3[3] = {10.0, 0.0, 0.0};
+	float h2pos3[3] = {50.0, 0.0, 0.0};
+	float h3pos3[3] = {-50.0, 0.0, 0.0};
+	float cpos3[3] = {65.0, 0.0, 0.0};
+	
+	jump->addActionInFrame("baseR", brpos3, 'r', 2);
+	jump->addActionInFrame("baseT", btpos3, 't', 2);
+	jump->addActionInFrame("haste1R", h1pos3, 'r', 2);
+	jump->addActionInFrame("haste2R", h2pos3, 'r', 2);
+	jump->addActionInFrame("haste3R", h3pos3, 'r', 2);
+	jump->addActionInFrame("cupulaR", cpos3, 'r', 2);
+	
+	float brpos4[3] = {0.0, 0.0, 0.0};
+	float btpos4[3] = {0.0, 0.0, 90.0};
+	float h1pos4[3] = {-60.0, 0.0, 0.0};
+	float h2pos4[3] = {160.0, 0.0, 0.0};
+	float h3pos4[3] = {-165.0, 0.0, 0.0};
+	float cpos4[3] = {60.0, 0.0, 0.0};
+	
+	jump->addActionInFrame("baseR", brpos4, 'r', 3);
+	jump->addActionInFrame("baseT", btpos4, 't', 3);
+	jump->addActionInFrame("haste1R", h1pos4, 'r', 3);
+	jump->addActionInFrame("haste2R", h2pos4, 'r', 3);
+	jump->addActionInFrame("haste3R", h3pos4, 'r', 3);
+	jump->addActionInFrame("cupulaR", cpos4, 'r', 3);
+	
+	float btpos5[3] = {0.0f, 0.0f, 90.0f};	
+
+	jump->addActionInFrame("baseT", btpos5, 't', 4);
+	//This part is exactly the first frame
+	jump->addActionInFrame("haste1R", h1pos1, 'r', 4);
+	jump->addActionInFrame("haste2R", h2pos1, 'r', 4);
+	jump->addActionInFrame("haste3R", h3pos1, 'r', 4);
+	jump->addActionInFrame("cupulaR", cpos1, 'r', 4);
+	
 }
 
 Scene* pixarNotQuite(float w, float h) {
@@ -657,22 +782,9 @@ Scene* pixarNotQuite(float w, float h) {
 	theScene->activateCamera("lampCam");	
 
 	/* Agora, as animacoes da cena */
-
-	Animation* prepareJump = new Animation;
-	Animation* jump = new Animation;	
-	jump->setScene(theScene);
-	prepareJump->setScene(theScene);
-
-	float pos1[3] = {0.0, 0.0, 0.0};
-	float pos2[3] = {0.0, 30.0, 40.0};
-	float pos3[3] = {0.0, 50.0, 40.0};
+	prepareJumpAnim(theScene);
+	standAnim(theScene);
+	jumpAnim(theScene);
 	
-	prepareJump->addActionInFrame("baseT", pos1, 't', 0);
-	prepareJump->addActionInFrame("baseT", pos2, 't', 1);
-	prepareJump->addActionInFrame("baseT", pos3, 't', 2);
-
-	theScene->addAnimation(prepareJump, "prepareJump");
-	theScene->addAnimation(jump, "jump");
-
 	return theScene;
 }

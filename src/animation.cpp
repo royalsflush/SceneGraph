@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #include <map>
 #include <vector>
@@ -44,6 +45,7 @@ void Animation::addActionInFrame(const char* transformName, float* vec, char typ
 	act->vector[0] = vec[0];
 	act->vector[1] = vec[1];
 	act->vector[2] = vec[2];
+	act->vector[3] = 1.0f;
 
 	act->type = type;
 	act->t = t;
@@ -68,8 +70,10 @@ void Animation::startAnimation() {
 		printf("This animation has %d frames\n", this->frames);
 	#endif
 
-	if (this->frames==1)
+	if (this->frames==1) {
+		this->active = false;
 		return;
+	}
 }
 
 void Animation::animate(int value) {
@@ -111,8 +115,40 @@ void Animation::changeTransform(Action* act) {
 			
 		//	act->t->printMatrix();			
 		}
-		else if (act->type == 'r') {
+		else if (act->type == 'r') {	
+			float alpha = 0;
+			float nv1=0, nv2=0;
 
+			for (int j=0; j<4; j++) {
+				nv1+=act->vector[j]*act->vector[j];
+				nv2+=nextAction->vector[j]*nextAction->vector[j];
+			}	
+
+			nv1=sqrt(nv1); nv2=sqrt(nv2);
+
+
+			//dot product
+			for (int j=0; j<4; j++)
+				alpha+=act->vector[j]*nextAction->vector[j];
+			
+			alpha /= (nv1*nv2);
+			alpha = acos(alpha);
+			
+			for (int j=0; j<4; j++)
+				interpol[j]= (sin((1-t)*alpha)*act->vector[j]+sin(t*alpha)*nextAction->vector[j])/sin(alpha);
+
+			float angle = 0;
+
+			for (int j=0; j<4; j++)
+				angle+=interpol[j]*interpol[j];
+
+			angle = sqrt(angle);
+
+			act->t->identity();
+			act->t->rotate(angle, interpol[0]/angle, interpol[1]/angle, interpol[2]/angle);
+		
+			if (strcmp(act->t->getId().c_str(), "haste1R")==0)
+				printf("interpol: {%f, %f, %f}\n", interpol[0], interpol[1], interpol[2]);
 		}
 
 		return;

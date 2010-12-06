@@ -2,7 +2,7 @@
 #define ENVIRON_H
 
 enum fogModes {
-	linear, exp, exp2
+	fog_linear, fog_exp, fog_exp2
 };
 
 class Environ {
