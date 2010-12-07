@@ -4,6 +4,8 @@
 #include <string>
 using namespace std;
 
+class Renderer;
+
 //Node is an abstract class
 
 class Node {
@@ -20,6 +22,7 @@ class Node {
 	virtual int setupLights() = 0;
 	virtual int setupCamera() = 0;
 	virtual Node* findNode(const char* name, const char* nType);
+	virtual void addRenderer(Renderer* r);
 };
 
 #endif /* SG_NODE_H */

@@ -72,27 +72,24 @@ void Cube::buildCube()
 
 void Cube::draw()
 {
+	if (!this->currRend) return;
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glScalef(this->dimX, this->dimY, this->dimZ);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	
-	glVertexPointer(3, GL_FLOAT, 0, this->vert);
-	glNormalPointer(GL_FLOAT, 0, this->norm);
-	
 	//Plano xy
 	glPushMatrix();
 	
 	glTranslatef(-0.5f, -0.5f, 0.5f);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
+
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 
 	glPushMatrix();
 	
 	glRotatef(180, -1, 0, 0);
 	glTranslatef(0.0f, -1.0f, 1.0f);	
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 	
 	glPopMatrix();
 	glPopMatrix();
@@ -103,12 +100,12 @@ void Cube::draw()
 
 	glPushMatrix();
 	glTranslatef(-0.5f, -0.5f, -0.5f);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 	glPopMatrix();	
 
 	glRotatef(180,-1, 0, 0);
 	glTranslatef(-0.5f, -0.5f, -0.5f);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 	glPopMatrix();
 
 	//Plano yz
@@ -117,20 +114,16 @@ void Cube::draw()
 
 	glPushMatrix();
 	glTranslatef(-0.5f, -0.5f, -0.5f);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 	glPopMatrix();	
 
 	glPushMatrix();
 	glRotatef(180,-1, 0, 0);
 	glTranslatef(-0.5f, -0.5f, -0.5f);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);	
-	glPopMatrix();
-
-	glPopMatrix();
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 	
+	glPopMatrix();
+	glPopMatrix();
 	glPopMatrix();
 }
 

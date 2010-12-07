@@ -74,3 +74,11 @@ void Group::printChildren()
 
 	printf("\n");
 }
+
+void Group::addRenderer(Renderer* r)
+{
+	list<Node*>::iterator it;
+
+	for (it=this->children.begin(); it!=this->children.end(); ++it) 
+		(*it)->addRenderer(r);
+}

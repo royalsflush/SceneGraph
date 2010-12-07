@@ -9,6 +9,7 @@ class Mesh : public Shape {
 	unsigned int* ind;
 	int nVert;
 	int nInd;
+	unsigned int vbuf, ibuf, nbuf;
 
 	public:
 	Mesh(const char* filename);

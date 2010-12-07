@@ -7,6 +7,8 @@ using namespace std;
 
 #include "node.h"
 
+class Renderer;
+
 class Group : public Node {
 	list<Node*> children;	
 
@@ -21,6 +23,7 @@ class Group : public Node {
 	virtual void printChildren();
 	virtual Node* findNode(const char* name, const char* type);
 	void addNode(Node* newNode);
+	void addRenderer(Renderer* r);
 };
 
 #endif /* SG_GROUP_H */

@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include "node.h"
+#include "renderer.h"
 
 class Shape;
 class Appearance;
@@ -15,6 +16,9 @@ class Entity : public Node {
 	void render();
 	int setupCamera();
 	int setupLights();
+	
+	void changeRenderMode(rend_modes newMode);
+	void addRenderer(Renderer* r);
 };
 
 #endif /* ENTITY_H */

@@ -8,6 +8,7 @@
 	#include <GL/glut.h>
 #endif
 
+#include "renderer.h"
 #include "mesh.h"
 
 Mesh::Mesh(const char* filename)
@@ -44,18 +45,27 @@ Mesh::Mesh(const char* filename)
 			fscanf(fp, "%u", &this->ind[3*i+j]);
 	}
 
+	glGenBuffers(1, &vbuf); 
+	glBindBuffer(GL_ARRAY_BUFFER, vbuf);
+	glBufferData(GL_ARRAY_BUFFER, this->nVert*3*sizeof(float), this->vert, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &ibuf); 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibuf);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*3*this->nInd, this->ind, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			
+	glGenBuffers(1, &nbuf); 
+	glBindBuffer(GL_ARRAY_BUFFER, nbuf);
+	glBufferData(GL_ARRAY_BUFFER, this->nVert*sizeof(float)*3, this->norm, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	fclose(fp);
 }
 
 void Mesh::draw()
 {
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-
-	glVertexPointer(3, GL_FLOAT, 0, this->vert);
-	glNormalPointer(GL_FLOAT, 0, this->norm);
-	glDrawElements(GL_TRIANGLES, 3*(this->nInd), GL_UNSIGNED_INT, this->ind);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
+	if (!this->currRend) return;
+	
+	this->currRend->draw(this->vert, this->ind, this->norm, this->nInd);
 }

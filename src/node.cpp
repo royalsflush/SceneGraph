@@ -31,3 +31,5 @@ string Node::getType()
 {
 	return type;
 }
+
+void Node::addRenderer(Renderer* r) {	}

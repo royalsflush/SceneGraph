@@ -27,3 +27,13 @@ int Entity::setupLights()
 { 
 	return 0;
 }
+
+void Entity::changeRenderMode(rend_modes newMode)
+{
+	shape->setRenderMode(newMode);
+}
+
+void Entity::addRenderer(Renderer* r)
+{
+	shape->setRenderer(r);
+}

@@ -1,11 +1,11 @@
 CC = g++
 CFLAGS= #-O2
-LIBS = -lm
+LIBS = -lm -lGLEW
 SRC= main.cpp node.cpp engine.cpp scene.cpp camera.cpp	\
      transform.cpp group.cpp cube.cpp entity.cpp light.cpp	\
      sphere.cpp material.cpp manipulator.cpp testScenes.cpp \
      switch.cpp mesh.cpp environ.cpp matrix.cpp texture.cpp \
-     imageloader.cpp fpview.cpp animation.cpp 
+     imageloader.cpp fpview.cpp animation.cpp renderer.cpp 
   
 OUTPUT=out
 
@@ -130,8 +130,8 @@ manipulator.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
 manipulator.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
 manipulator.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
 manipulator.o: /usr/include/machine/types.h /usr/include/i386/types.h
-testScenes.o: testScenes.h engine.h animation.h scene.h group.h node.h
-testScenes.o: environ.h camera.h camMan.h transform.h matrix.h
+testScenes.o: testScenes.h engine.h animation.h renderer.h scene.h group.h
+testScenes.o: node.h environ.h camera.h camMan.h transform.h matrix.h
 testScenes.o: /usr/include/stdarg.h /usr/include/assert.h
 testScenes.o: /usr/include/sys/cdefs.h /usr/include/stdio.h
 testScenes.o: /usr/include/_types.h /usr/include/sys/_types.h
@@ -168,7 +168,8 @@ mesh.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
 mesh.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
 mesh.o: /usr/include/libkern/_OSByteOrder.h
 mesh.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
-mesh.o: /usr/include/machine/types.h /usr/include/i386/types.h mesh.h shape.h
+mesh.o: /usr/include/machine/types.h /usr/include/i386/types.h renderer.h
+mesh.o: mesh.h shape.h
 environ.o: /usr/include/stdio.h /usr/include/_types.h
 environ.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
 environ.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
@@ -225,5 +226,11 @@ animation.o: /usr/include/stdio.h /usr/include/_types.h
 animation.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
 animation.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
 animation.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+animation.o: /usr/include/math.h /usr/include/architecture/i386/math.h
 animation.o: animation.h transform.h group.h node.h matrix.h
 animation.o: /usr/include/stdarg.h /usr/include/assert.h scene.h environ.h
+renderer.o: /usr/include/stdio.h /usr/include/_types.h
+renderer.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+renderer.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+renderer.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+renderer.o: renderer.h

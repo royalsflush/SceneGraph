@@ -1,6 +1,7 @@
 #include "testScenes.h"
 #include "engine.h"
 #include "animation.h"
+#include "renderer.h"
 
 #include "scene.h"
 #include "camera.h"
@@ -766,6 +767,9 @@ Scene* pixarNotQuite(float w, float h) {
 	auxCam->setAspectRatio(w/h);
 	auxCam->setAngle(50.0f);
 
+	Renderer* theRenderer = new Renderer;
+	theRenderer->setMode(toon);
+
 	Transform* lamp = buildLamp();
 	lamp->scale(0.2f, 0.2f, 0.2f);
 	lamp->rotate(90, 0.0f, 1.0f, 0.0f);
@@ -776,7 +780,7 @@ Scene* pixarNotQuite(float w, float h) {
 	greyPlastic->setShininess(128);
 
 	Cube* floorCube = new Cube(200.0, 1.0f, 200.0f);
-	floorCube->setDiv(100);
+	floorCube->setDiv(50);
 
 	Entity* floor = new Entity("floor", floorCube, greyPlastic);
 	Transform* floorT = new Transform("floorT");
@@ -803,11 +807,12 @@ Scene* pixarNotQuite(float w, float h) {
 	theScene->addNode(l0);
 	theScene->addNode(floorT);
 	theScene->addNode(boxT);
+	theScene->addRenderer(theRenderer);
 	
 	Transform* bulbT = (Transform*) theScene->findNode("bulbT", "Transform");
 	bulbT->addNode(auxCam);
 
-	theScene->setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	theScene->setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	theScene->activateCamera("lampCam");	
 
 	/* Agora, as animacoes da cena */
