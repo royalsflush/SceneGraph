@@ -379,10 +379,10 @@ Transform* buildLamp()
 
 	Material* redPlastic = new Material(0.5f, 0.0f, 0.0f);
 	redPlastic->setSpecular(0.2f, 0.2f, 0.2f);
-	redPlastic->setShininess(1);	
+	redPlastic->setShininess(50);	
 	
-	Material* redLamp = new Material(0.2f, 0.2f, 0.2f);
-	redLamp->setSpecular(0.2f, 0.2f, 0.2f);
+	Material* redLamp = new Material(0.8f, 0.8f, 0.8f);
+	redLamp->setSpecular(0.8f, 0.8f, 0.8f);
 	redLamp->setShininess(40);	
 
 	Entity* baseA = new Entity("baseA", new Mesh("luxor/base_a.msh"), redPlastic);
@@ -715,7 +715,6 @@ void jumpAnim(Scene* s) {
 	
 	//Reversing the jump
 
-	reverseJump->addActionInFrame("baseT", btpos5, 't', 0);	
 	reverseJump->addActionInFrame("haste1R", h1pos1, 'r', 0);	
 	reverseJump->addActionInFrame("haste2R", h2pos1, 'r', 0);	
 	reverseJump->addActionInFrame("haste3R", h3pos1, 'r', 0);	
@@ -787,19 +786,20 @@ Scene* pixarNotQuite(float w, float h) {
 	floorT->translate(-3.0f, -3.5f, -40.0f);
 	floorT->addNode(floor);
 
-	Material* redPlastic = new Material(0.5f, 0.f, 0.0f);
+	Material* redPlastic = new Material(0.6f, 0.0f, 0.0f);
 	redPlastic->setSpecular(0.5f, 0.5f, 0.5f);
-	redPlastic->setShininess(128);
+	redPlastic->setShininess(60);
 	
-	Entity* box = new Entity("box", new Cube(3.0f, 30.0f, 3.0f), redPlastic);
+	Entity* box = new Entity("box", new Cube(5.0f, 10.0f, 5.0f), redPlastic);
 	Transform* boxT = new Transform("boxT");
-	boxT->translate(24.0f, 10.0f, -40.0f);
+	boxT->rotate(30, 0.0f, 1.0f, 0.0f);
+	boxT->translate(24.0f, 0.0f, -40.0f);
 	boxT->addNode(box);	
 
-	Light* l0 = new Light("mainL", 0.0f, 0.0f, 1.0f, 0.0f);
-	l0->setAmbient(0.2f, 0.2f, 0.2f, 1.0f);
-	l0->setDiffuse(0.2f, 0.2f, 0.2f, 1.0f);
-	l0->setSpecular(0.2f, 0.2f, 0.2f, 1.0f);
+	Light* l0 = new Light("mainL", 0.0f, 0.0f, -1.0f, 0.0f);
+	l0->setAmbient(0.4f, 0.4f, 0.4f, 1.0f);
+	l0->setDiffuse(0.3f, 0.5f, 0.5f, 1.0f);
+	l0->setSpecular(0.5f, 0.5f, 0.5f, 1.0f);
 
 	Scene* theScene = new Scene("mainScene");	
 	theScene->addNode(theCamera);
@@ -812,7 +812,7 @@ Scene* pixarNotQuite(float w, float h) {
 	Transform* bulbT = (Transform*) theScene->findNode("bulbT", "Transform");
 	bulbT->addNode(auxCam);
 
-	theScene->setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	theScene->setClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	theScene->activateCamera("lampCam");	
 
 	/* Agora, as animacoes da cena */

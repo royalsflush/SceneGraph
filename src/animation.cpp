@@ -22,7 +22,7 @@ using namespace std;
 #define TORAD(theta) (theta*PI)/180.0 
 #define TODEG(theta) 180.0*theta/PI
 
-Animation::Animation() : animationScene(NULL), frameDuration(1.0), frames(0), active(false) { }
+Animation::Animation() : animationScene(NULL), frameDuration(1.0), frames(0), active(false), quadInter(-2) { }
 
 Animation::~Animation() {
 	for (int i=0; i<actionsPerFrame.size(); i++)
@@ -67,6 +67,7 @@ void Animation::startAnimation() {
 	this->dtElapsed = 0; 	
 	this->maxT = (this->frameDuration)*60;	
 	this->active = true;
+	this->quadInter = -2;
 
 	#ifdef _ANIM
 		printf("Started the animation, maxT = %f\n", this->maxT);
@@ -110,8 +111,24 @@ void Animation::changeTransform(Action* act) {
 		if (act->t != nextAction->t) continue;
 		
 		if (act->type == 't') {
+			if (quadInter+1==this->currFrame) continue;
+			quadInter=this->currFrame;			
+
+			Action* nnextAct = NULL;
+			
+			if (dst+1>=this->frames) continue;
+
+			for (int j=0; j<actionsPerFrame[dst+1].size(); j++) {
+				if (actionsPerFrame[dst+1][j]->t == act->t) {
+					nnextAct = actionsPerFrame[dst+1][j];
+					break;
+				}
+			}
+
+			if (nnextAct==NULL) continue;
+
 			for (int j=0; j<3; j++)
-				interpol[j]=(1-t*t)*act->vector[j]+t*t*nextAction->vector[j];
+				interpol[j]=(1-t)*(1-t)*act->vector[j]+2*(1-t)*t*nextAction->vector[j]+t*t*nnextAct->vector[j];
 			
 			act->t->identity();
 			act->t->translate(interpol[0], interpol[1], interpol[2]);

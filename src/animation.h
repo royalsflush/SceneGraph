@@ -52,6 +52,9 @@ class Animation {
 	int dtElapsed;
 	int maxT;
 
+	//last Frame that had quadratic interpolation
+	int quadInter;
+
 	//Private methods
 	void changeTransform(Action* act);
 
